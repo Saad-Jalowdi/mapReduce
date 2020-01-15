@@ -1,5 +1,4 @@
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
 
@@ -18,10 +17,25 @@ public class Splitter extends Thread{
     public void run() {
         try(final ObjectOutputStream objectOutputStream = new ObjectOutputStream(mapper.getOutputStream())){
             objectOutputStream.writeObject(chunk);
+            print(chunk.toString());
             objectOutputStream.writeObject(config);
             mapper.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    protected void print(String msg) {
+        try {
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromSplitter.txt"),true);
+            fileWriter.write(msg+"\n");
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
