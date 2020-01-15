@@ -65,6 +65,8 @@ public abstract class Reducer<K, V> {
         try {
             FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromReducer.txt"),true);
             fileWriter.write(msg+"\n");
+            fileWriter.flush();
+            fileWriter.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
