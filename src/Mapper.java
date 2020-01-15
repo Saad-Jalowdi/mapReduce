@@ -45,7 +45,7 @@ public abstract class Mapper<K extends Comparable, V> {
 
     protected void mapperStarted(String msg){
         try {
-            PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msg.txt")));
+            PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msgFromMapper.txt")));
             printStream.append(msg);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

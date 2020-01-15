@@ -92,7 +92,7 @@ public class Result {
 
     protected void resultStarted(String msg){
         try {
-            PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msg.txt")));
+            PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msgFromResult.txt")));
             printStream.append(msg);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
