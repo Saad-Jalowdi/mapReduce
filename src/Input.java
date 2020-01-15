@@ -46,6 +46,7 @@ public class Input {
             counter++;
         }
         for (int i = 0; i < splits; i++) {
+            print(mapperIpAddresses.get(i));
             new Splitter(new Socket(mapperIpAddresses.get(i),Ports.SPLITTER_MAPPER_PORT),chunks.get(i), config).start();
         }
 
@@ -84,5 +85,19 @@ public class Input {
             e.printStackTrace();
         }
     }
+
+    protected void print(String msg) {
+        try {
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromInput.txt"),true);
+            fileWriter.write(msg+"\n");
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
