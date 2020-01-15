@@ -17,7 +17,7 @@ public class WordCountReducer extends Reducer<String, Integer> {
     }
 
     public static void main(String[] args) {
-        new WordCountMapper().start();
+        new WordCountReducer().start();
     }
 }
 
