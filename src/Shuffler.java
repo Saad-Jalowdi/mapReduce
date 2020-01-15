@@ -89,11 +89,13 @@ public class Shuffler {
                     Context chunk = (Context) iterator.next();
                     Socket reducer = new Socket(ip, Ports.SHUFFLER_REDUCER_PORT);
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(reducer.getOutputStream());
+                    print(chunk.toString());
                     objectOutputStream.writeObject(chunk);
                     objectOutputStream.writeUTF(config.getResultIp());
                     objectOutputStream.close();
                     reducer.close();
                 } catch (IOException e) {
+                    print(e.toString());
                     e.printStackTrace();
                 }
             }).start();

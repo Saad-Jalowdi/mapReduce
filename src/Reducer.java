@@ -45,9 +45,11 @@ public abstract class Reducer<K, V> {
             Socket result = new Socket(resultIp, Ports.REDUCER_RESULT_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(result.getOutputStream());
             objectOutputStream.writeObject(context.getMap());
+            print(context.getMap().toString());
             objectOutputStream.close();
             result.close();
         } catch (IOException e) {
+            print(e.toString());
             e.printStackTrace();
         }
     }
