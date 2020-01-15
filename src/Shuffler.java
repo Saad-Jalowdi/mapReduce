@@ -125,6 +125,8 @@ public class Shuffler {
         try {
             FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromShuffler.txt"),true);
             fileWriter.write(msg+"\n");
+            fileWriter.flush();
+            fileWriter.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

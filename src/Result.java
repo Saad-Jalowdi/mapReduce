@@ -95,6 +95,8 @@ public class Result {
         try {
             FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromResult.txt"),true);
             fileWriter.write(msg+"\n");
+            fileWriter.flush();
+            fileWriter.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
