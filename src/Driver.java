@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 public class Driver {
     public static void main(String[] args) {
         try {
+            TimeUnit.SECONDS.sleep(10);
             Configuration configuration = new Configuration(new File("/map_reduce/input.txt"), new File("/map_reduce/output.txt"));
             PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/stdout.txt")));
             printStream.println(
@@ -19,7 +20,6 @@ public class Driver {
             job.setReducerClass(WordCountReducer.class);
             job.start();
             print("testing");
-            TimeUnit.MINUTES.sleep(1);
 
         } catch (Exception e) {
             e.printStackTrace();
