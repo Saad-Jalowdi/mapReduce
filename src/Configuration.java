@@ -27,7 +27,7 @@ public class Configuration implements Serializable {
     }
 
     private void readNumberOfNodes() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("/mapReduce/nodes.txt"));
+        Scanner scanner = new Scanner(new File("/map_reduce/nodes.txt"));
         this.mapperNodes = Integer.parseInt(scanner.next());
         this.reducerNodes = Integer.parseInt(scanner.next());
     }
