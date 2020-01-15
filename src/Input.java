@@ -41,6 +41,7 @@ public class Input {
             if (counter == sizeForEachSplit) {
                 chunks.add((LinkedList<String>) tmp.clone());
                 tmp.clear();
+                counter = 0;
             }
             tmp.add(s);
             counter++;
