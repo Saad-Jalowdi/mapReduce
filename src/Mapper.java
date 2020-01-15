@@ -34,6 +34,9 @@ public abstract class Mapper<K extends Comparable, V> {
             Socket shuffler = new Socket(config.getShufflerIp(), Ports.MAPPER_SHUFFLER_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             objectOutputStream.writeObject(context);
+            print(context.getMap().toString());
+            objectOutputStream.close();
+            shuffler.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
