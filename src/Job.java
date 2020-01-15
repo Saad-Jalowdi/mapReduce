@@ -34,7 +34,7 @@ public class Job {
     private void validateMapper() throws Exception {
 
         if (mapperClass.getSuperclass().equals(Mapper.class)) {
-            FileOutputStream fileOutputStream = new FileOutputStream(new File("/mapReduce/mapper_class.txt"));
+            FileOutputStream fileOutputStream = new FileOutputStream(new File("/map_reduce/mapper_class.txt"));
             PrintStream printStream = new PrintStream(fileOutputStream);
             printStream.println(mapperClass.getName());
             while (!containersCreated("mapper_created.txt")) ;
@@ -47,7 +47,7 @@ public class Job {
 
     private void validateReducer() throws Exception {
         if (reducerClass.getSuperclass().equals(Reducer.class)) {
-            FileOutputStream fileOutputStream = new FileOutputStream(new File("/mapReduce/reducer_class.txt"));
+            FileOutputStream fileOutputStream = new FileOutputStream(new File("/map_reduce/reducer_class.txt"));
             PrintStream printStream = new PrintStream(fileOutputStream);
             printStream.println(mapperClass.getName());
             while (!containersCreated("reducer_created.txt")) ;
@@ -59,10 +59,10 @@ public class Job {
     }
 
     private boolean containersCreated(String s) throws InterruptedException, FileNotFoundException {
-        while (!new File("/mapReduce/" + s).exists()) {
+        while (!new File("/map_reduce/" + s).exists()) {
             TimeUnit.MILLISECONDS.sleep(250);
         }
-        File file = new File("/mapReduce/" + s);
+        File file = new File("/map_reduce/" + s);
         Scanner scanner = new Scanner(file);
         return scanner.next().equals("1") ? true : false;
     }
