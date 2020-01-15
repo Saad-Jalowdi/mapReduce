@@ -65,6 +65,7 @@ public abstract class Reducer<K, V> {
         try {
             PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msgFromReducer.txt")));
             printStream.append(msg+"\n");
+            printStream.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

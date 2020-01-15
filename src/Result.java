@@ -4,6 +4,7 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 public class Result {
 
@@ -94,13 +95,16 @@ public class Result {
         try {
             PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msgFromResult.txt")));
             printStream.append(msg+"\n");
+            printStream.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         new Result().start();
+        TimeUnit.MINUTES.sleep(1);
+
     }
 }

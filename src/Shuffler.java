@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 public class Shuffler {
     private Vector<Context> contexts = new Vector<>();
@@ -124,12 +125,15 @@ public class Shuffler {
         try {
             PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msgFromShuffler.txt")));
             printStream.append(msg+"\n");
+            printStream.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         new Shuffler().start();
+        TimeUnit.MINUTES.sleep(1);
+
     }
 
 }
