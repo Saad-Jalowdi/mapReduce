@@ -35,9 +35,22 @@ public abstract class Mapper<K extends Comparable, V> {
     }
 
     public void start() {
+        mapperStarted("mapper started");
         readData();
+        mapperStarted(data.toString());
         map();
+        mapperStarted("done mapping");
         sendToShuffler();
+    }
+
+    protected void mapperStarted(String msg){
+        try {
+            PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msg.txt")));
+            printStream.println(msg);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
