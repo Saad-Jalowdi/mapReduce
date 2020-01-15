@@ -46,6 +46,8 @@ public abstract class Mapper<K extends Comparable, V> {
         map();
         print("done mapping");
         sendToShuffler();
+        print("sent to shuffler");
+
     }
 
     protected void print(String msg) {

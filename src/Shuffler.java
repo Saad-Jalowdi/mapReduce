@@ -117,7 +117,9 @@ public class Shuffler {
     public void start() {
         print("hello");
         readConfig();
+        print("read config");
         readFromMappers();
+        print("read from mappers");
         sort();
         sendToReducers();
     }
