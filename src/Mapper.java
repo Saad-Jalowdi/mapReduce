@@ -13,9 +13,14 @@ public abstract class Mapper<K extends Comparable, V> {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.SPLITTER_MAPPER_PORT);
             Socket splitter = serverSocket.accept();
+            print("connected with" + splitter.getInetAddress());
             ObjectInputStream objectInputStream = new ObjectInputStream(splitter.getInputStream());
             data = (LinkedList<String>) objectInputStream.readObject();
             config = (Configuration) objectInputStream.readObject();
+            objectInputStream.close();
+            splitter.close();
+            serverSocket.close();
+            print("read data finished");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -35,18 +40,18 @@ public abstract class Mapper<K extends Comparable, V> {
     }
 
     public void start() {
-        mapperStarted("mapper started");
+        print("mapper started");
         readData();
-        mapperStarted(data.toString());
+        print(data.toString());
         map();
-        mapperStarted("done mapping");
+        print("done mapping");
         sendToShuffler();
     }
 
-    protected void mapperStarted(String msg){
+    protected void print(String msg) {
         try {
             PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msgFromMapper.txt")));
-            printStream.append(msg);
+            printStream.append(msg+"\n");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

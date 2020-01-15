@@ -14,10 +14,12 @@ public abstract class Reducer<K, V> {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.SHUFFLER_REDUCER_PORT);
             Socket shuffler = serverSocket.accept();
+            print("connected with"+shuffler.getInetAddress());
             ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             mapperContext = (Context) objectInputStream.readObject();
             resultIp = objectInputStream.readUTF();
             keys = mapperContext.getMap().keySet();
+            print(mapperContext.getMap().toString());
             objectInputStream.close();
             shuffler.close();
             serverSocket.close();
@@ -51,18 +53,18 @@ public abstract class Reducer<K, V> {
     }
 
     protected void start() {
-        reducerStarted("helli ");
+        print("hello ");
         readContext();
-        reducerStarted(context.getMap().toString());
+        print(context.getMap().toString());
         reduce();
-        reducerStarted(" reduced");
+        print(" reduced");
         sendToResult();
-        reducerStarted("send to result");
+        print("send to result");
     }
-    protected void reducerStarted(String msg) {
+    protected void print(String msg) {
         try {
             PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msgFromReducer.txt")));
-            printStream.append(msg);
+            printStream.append(msg+"\n");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

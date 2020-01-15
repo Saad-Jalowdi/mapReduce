@@ -65,7 +65,7 @@ public class Result {
                 }
             });
         }
-
+        print(map.toString());
     }
 
     private void writeFinalResult() {
@@ -81,19 +81,19 @@ public class Result {
 
 
     private void start() {
-        resultStarted("hello");
+        print("hello");
         readConfig();
-        resultStarted("config read");
+        print("config read");
         readContext();
         merge();
         writeFinalResult();
-        resultStarted("actually it finished");
+        print("actually it finished");
     }
 
-    protected void resultStarted(String msg){
+    protected void print(String msg){
         try {
             PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msgFromResult.txt")));
-            printStream.append(msg);
+            printStream.append(msg+"\n");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
