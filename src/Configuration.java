@@ -19,15 +19,15 @@ public class Configuration implements Serializable {
         this.inputFile = inputFile;
         this.outputFile = outputFile;
         readNumberOfNodes();
-        readAddresses("/mapReduce/mapper_ip_addresses.txt");
-        readAddresses("/mapReduce/reducer_ip_addresses.txt");
-        readAddresses("/mapReduce/shuffler_ip_address.txt");
-        readAddresses("/mapReduce/result_ip_address.txt");
+        readAddresses("/map_reduce/mapper_ip_addresses.txt");
+        readAddresses("/map_reduce/reducer_ip_addresses.txt");
+        readAddresses("/map_reduce/shuffler_ip_address.txt");
+        readAddresses("/map_reduce/result_ip_address.txt");
 
     }
 
-    private void readNumberOfNodes() {
-        Scanner scanner = new Scanner("nodes.txt");
+    private void readNumberOfNodes() throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File("/mapReduce/nodes.txt"));
         this.mapperNodes = Integer.parseInt(scanner.next());
         this.reducerNodes = Integer.parseInt(scanner.next());
     }
@@ -36,17 +36,17 @@ public class Configuration implements Serializable {
         try {
             Scanner scanner = new Scanner(new File(pathname));
             LinkedList<String> tmp;
-            if (pathname.equals("/mapReduce/mapper_ip_addresses.txt")) {
+            if (pathname.equals("/map_reduce/mapper_ip_addresses.txt")) {
                 waitUntilFileCreated(pathname);
                 tmp = mapperIpAddresses;
-            } else if (pathname.equals("/mapReduce/reducer_ip_addresses.txt")) {
+            } else if (pathname.equals("/map_reduce/reducer_ip_addresses.txt")) {
                 waitUntilFileCreated(pathname);
                 tmp = reducerIpAddresses;
-            } else if (pathname.equals("/mapReduce/shuffler_ip_address.txt")) {
+            } else if (pathname.equals("/map_reduce/shuffler_ip_address.txt")) {
                 waitUntilFileCreated(pathname);
                 this.shufflerIp = scanner.next();
                 return;
-            } else if(pathname.equals("/mapReduce/result_ip_address.txt")){
+            } else if(pathname.equals("/map_reduce/result_ip_address.txt")){
                 waitUntilFileCreated(pathname);
                 this.resultIp = scanner.next();
                 return;

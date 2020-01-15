@@ -9,7 +9,6 @@ public class Driver {
             job.setMapperClass(WordCountMapper.class);
             job.setReducerClass(WordCountReducer.class);
             job.start();
-            TimeUnit.MINUTES.sleep(1);
         } catch (Exception e) {
             e.printStackTrace();
         }
