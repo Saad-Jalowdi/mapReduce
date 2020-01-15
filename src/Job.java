@@ -4,7 +4,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Job {
 
-
     private Class mapperClass;
     private Class reducerClass;
     private Configuration configuration;
