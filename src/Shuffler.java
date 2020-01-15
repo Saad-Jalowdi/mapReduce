@@ -89,7 +89,7 @@ public class Shuffler {
                     Context chunk = (Context) iterator.next();
                     Socket reducer = new Socket(ip, Ports.SHUFFLER_REDUCER_PORT);
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(reducer.getOutputStream());
-                    print(chunk.toString());
+                    print(chunk.getMap().toString());
                     objectOutputStream.writeObject(chunk);
                     objectOutputStream.writeUTF(config.getResultIp());
                     objectOutputStream.close();
@@ -125,6 +125,7 @@ public class Shuffler {
         print("read from mappers");
         sort();
         sendToReducers();
+        print("sent to reducers");
     }
 
     protected void print(String msg) {
