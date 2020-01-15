@@ -46,6 +46,7 @@ public class Input {
             tmp.add(s);
             counter++;
         }
+        chunks.add((LinkedList<String>) tmp.clone());
         for (int i = 0; i < splits; i++) {
             print(mapperIpAddresses.get(i));
             print(chunks.get(i).toString());
