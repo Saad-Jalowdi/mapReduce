@@ -31,6 +31,7 @@ public abstract class Mapper<K extends Comparable, V> {
 
     private void sendToShuffler() {
         try {
+            print(config.getShufflerIp());
             Socket shuffler = new Socket(config.getShufflerIp(), Ports.MAPPER_SHUFFLER_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             objectOutputStream.writeObject(context);

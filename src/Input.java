@@ -69,7 +69,7 @@ public class Input {
 
     private void sendConfigToResult(){
         try {
-            Socket result = new Socket(config.getResultIp(),Ports.INPUT_SHUFFLER_PORT);
+            Socket result = new Socket(config.getResultIp(),Ports.INPUT_RESULT_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(result.getOutputStream());
             objectOutputStream.writeObject(config);
             objectOutputStream.close();
