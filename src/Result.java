@@ -81,12 +81,24 @@ public class Result {
 
 
     private void start() {
+        resultStarted("hello");
         readConfig();
+        resultStarted("config read");
         readContext();
         merge();
         writeFinalResult();
+        resultStarted("actually it finished");
     }
 
+    protected void resultStarted(String msg){
+        try {
+            PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msg.txt")));
+            printStream.append(msg);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public static void main(String[] args) {
         new Result().start();

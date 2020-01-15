@@ -1,6 +1,4 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -53,9 +51,20 @@ public abstract class Reducer<K, V> {
     }
 
     protected void start() {
+        reducerStarted("helli ");
         readContext();
+        reducerStarted(context.getMap().toString());
         reduce();
+        reducerStarted(" reduced");
         sendToResult();
+        reducerStarted("send to result");
     }
-
+    protected void reducerStarted(String msg) {
+        try {
+            PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msg.txt")));
+            printStream.append(msg);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
