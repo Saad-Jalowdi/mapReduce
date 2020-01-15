@@ -1,6 +1,4 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Iterator;
@@ -116,12 +114,20 @@ public class Shuffler {
 
 
     public void start() {
+        print("hello");
         readConfig();
         readFromMappers();
         sort();
         sendToReducers();
     }
-
+    protected void print(String msg) {
+        try {
+            PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msgFromShuffler.txt")));
+            printStream.append(msg+"\n");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) {
         new Shuffler().start();
     }

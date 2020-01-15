@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.concurrent.TimeUnit;
@@ -17,9 +18,21 @@ public class Driver {
             job.setMapperClass(WordCountMapper.class);
             job.setReducerClass(WordCountReducer.class);
             job.start();
+            print("testing");
             TimeUnit.MINUTES.sleep(1);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public static void print(String msg) {
+        try {
+            PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msgFromDriver.txt")));
+            printStream.append(msg+"\n");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
