@@ -123,10 +123,11 @@ public class Shuffler {
     }
     protected void print(String msg) {
         try {
-            PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/msgFromShuffler.txt")));
-            printStream.append(msg+"\n");
-            printStream.flush();
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromShuffler.txt"),true);
+            fileWriter.write(msg+"\n");
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
