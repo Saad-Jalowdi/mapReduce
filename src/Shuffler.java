@@ -36,8 +36,9 @@ public class Shuffler {
             ServerSocket serverSocket = new ServerSocket(Ports.MAPPER_SHUFFLER_PORT);
             while (true) {
                 if (contexts.size() == config.getMapperNodes()) break;
+                print("waiting for mappers");
                 Socket mapper = serverSocket.accept();
-
+                print("connected with " + mapper.getInetAddress());
                 new Thread(() -> {
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(mapper.getInputStream());
@@ -123,10 +124,11 @@ public class Shuffler {
         sort();
         sendToReducers();
     }
+
     protected void print(String msg) {
         try {
-            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromShuffler.txt"),true);
-            fileWriter.write(msg+"\n");
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromShuffler.txt"), true);
+            fileWriter.write(msg + "\n");
             fileWriter.flush();
             fileWriter.close();
         } catch (FileNotFoundException e) {
@@ -135,6 +137,7 @@ public class Shuffler {
             e.printStackTrace();
         }
     }
+
     public static void main(String[] args) throws InterruptedException {
         new Shuffler().start();
         TimeUnit.MINUTES.sleep(1);
