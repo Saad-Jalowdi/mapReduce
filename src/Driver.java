@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.concurrent.TimeUnit;
 
 public class Driver {
     public static void main(String[] args) {
@@ -16,6 +17,7 @@ public class Driver {
             job.setMapperClass(WordCountMapper.class);
             job.setReducerClass(WordCountReducer.class);
             job.start();
+            TimeUnit.MINUTES.sleep(1);
         } catch (Exception e) {
             e.printStackTrace();
         }
