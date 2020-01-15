@@ -48,6 +48,7 @@ public class Input {
         }
         for (int i = 0; i < splits; i++) {
             print(mapperIpAddresses.get(i));
+            print(chunks.get(i).toString());
             new Splitter(new Socket(mapperIpAddresses.get(i),Ports.SPLITTER_MAPPER_PORT),chunks.get(i), config).start();
         }
 
