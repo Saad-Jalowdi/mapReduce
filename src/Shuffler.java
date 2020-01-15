@@ -42,7 +42,9 @@ public class Shuffler {
                 new Thread(() -> {
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(mapper.getInputStream());
-                        contexts.add((Context) objectInputStream.readObject());
+                        Context context = (Context) objectInputStream.readObject();
+                        print(context.getMap().toString());
+                        contexts.add(context);
                         if (contexts.size() == config.getMapperNodes()) {
                             objectInputStream.close();
                             mapper.close();
