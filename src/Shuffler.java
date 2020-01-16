@@ -38,8 +38,11 @@ public class Shuffler {
                 print("connected with " + mapper.getInetAddress());
                 new Thread(() -> {
                     try {
+                        print("entered thread");
                         ObjectInputStream objectInputStream = new ObjectInputStream(mapper.getInputStream());
+                        print("object input stream created");
                         Context context = (Context) objectInputStream.readObject();
+                        print("context read");
                         print(context.getMap().toString());
                         contexts.add(context);
                         if (contexts.size() == config.getMapperNodes()) {
