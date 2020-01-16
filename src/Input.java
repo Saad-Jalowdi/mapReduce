@@ -57,6 +57,8 @@ public class Input {
                     chunks.getLast().add(listOfStrings.get(i));
                 }
             }
+            print("chunks : " );
+            for (LinkedList chunk : chunks)print(chunk.toString());
             for (int i = 0; i < splits; i++) {
                 print(mapperIpAddresses.get(i));
                 print(chunks.get(i).toString());
