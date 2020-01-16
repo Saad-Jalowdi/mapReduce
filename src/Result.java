@@ -44,6 +44,7 @@ public class Result {
                             //TODO LOG this ...
                         }
                     } catch (IOException | ClassNotFoundException e) {
+                        print(e.toString());
                         e.printStackTrace();
                     }
                 }).start();
