@@ -49,13 +49,12 @@ public class Input {
                 filled++;
                 counter++;
             }
-            print(filled + " " + listOfStrings.size());
-            if (filled < listOfStrings.size()) {
-                for (int i = filled; i < listOfStrings.size(); i++) {
-                    tmp.add(listOfStrings.get(i));
+            chunks.add((LinkedList<String>) tmp.clone());
+            if (sizeForEachSplit*splits != listOfStrings.size()) {
+                for (int i = sizeForEachSplit*splits; i < listOfStrings.size(); i++) {
+                    chunks.getLast().add(listOfStrings.get(i));
                 }
             }
-            chunks.add((LinkedList<String>) tmp.clone());
             for (int i = 0; i < splits; i++) {
                 print(mapperIpAddresses.get(i));
                 print(chunks.get(i).toString());
