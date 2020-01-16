@@ -29,6 +29,7 @@ public class Result {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.REDUCER_RESULT_PORT);
             while (true) {
+                print("contexts size = : " + contexts.size());
                 if (contexts.size() == config.getReducerNodes()) break;
                 print("waiting for reducers");
                 Socket reducer = serverSocket.accept();
@@ -50,6 +51,7 @@ public class Result {
                 }).start();
             }
         } catch (IOException e) {
+            print(e.toString());
             e.printStackTrace();
         }
     }
@@ -79,6 +81,8 @@ public class Result {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             PrintStream printStream = new PrintStream(fileOutputStream);
             map.forEach((k, v) -> printStream.println(k + "," + v));
+            printStream.flush();
+            printStream.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -91,7 +95,9 @@ public class Result {
             readConfig();
             print("config read");
             readContext();
+            print("context read");
             merge();
+            print("done merging");
             writeFinalResult();
             print("actually it finished");
         } catch (Exception e) {
