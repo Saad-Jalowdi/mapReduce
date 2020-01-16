@@ -35,6 +35,7 @@ public class Result {
                 Socket reducer = serverSocket.accept();
                 print(" connection established with : " + reducer.getInetAddress());
                 new Thread(() -> {
+                    print("entered thread");
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(reducer.getInputStream());
                         Context context = (Context) objectInputStream.readObject();
