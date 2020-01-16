@@ -45,12 +45,13 @@ public abstract class Mapper<K extends Comparable, V> {
         }
     }
 
-    public void start()  {
+    public void start() throws InterruptedException {
         print("mapper started");
         readData();
         print(data.toString());
         map();
         print("done mapping");
+        TimeUnit.SECONDS.sleep(5);
         sendToShuffler();
         print("sent to shuffler");
 
