@@ -55,13 +55,18 @@ public abstract class Reducer<K, V> {
     }
 
     protected void start() {
+        try {
         print("hello ");
         readContext();
-        print(context.getMap().toString());
+        print(mapperContext.getMap().toString());
         reduce();
         print(" reduced");
         sendToResult();
-        print("send to result");
+        print("send to result");}catch (Exception e){
+            print(e.toString());
+            System.exit(1);
+        }
+
     }
     protected void print(String msg) {
         try {
