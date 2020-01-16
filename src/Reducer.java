@@ -4,7 +4,7 @@ import java.net.Socket;
 
 public abstract class Reducer<K, V> {
 
-    protected Context<K, V> context;
+    protected Context<K, V> context = new Context<>();
     private Context<K, V> mapperContext;
     private Iterable<K> keys;
     private String resultIp;
@@ -14,7 +14,7 @@ public abstract class Reducer<K, V> {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.SHUFFLER_REDUCER_PORT);
             Socket shuffler = serverSocket.accept();
-            print("connected with"+shuffler.getInetAddress());
+            print("connected with" + shuffler.getInetAddress());
             ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             mapperContext = (Context) objectInputStream.readObject();
             resultIp = objectInputStream.readUTF();
@@ -56,22 +56,24 @@ public abstract class Reducer<K, V> {
 
     protected void start() {
         try {
-        print("hello ");
-        readContext();
-        print(mapperContext.getMap().toString());
-        reduce();
-        print(" reduced");
-        sendToResult();
-        print("send to result");}catch (Exception e){
+            print("hello ");
+            readContext();
+            print("mapperContext: " + mapperContext.getMap().toString());
+            reduce();
+            print(" reduced");
+            sendToResult();
+            print("send to result");
+        } catch (Exception e) {
             print(e.toString());
             System.exit(1);
         }
 
     }
+
     protected void print(String msg) {
         try {
-            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromReducer.txt"),true);
-            fileWriter.write(msg+"\n");
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromReducer.txt"), true);
+            fileWriter.write(msg + "\n");
             fileWriter.flush();
             fileWriter.close();
         } catch (FileNotFoundException e) {
