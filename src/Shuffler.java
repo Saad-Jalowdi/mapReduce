@@ -80,6 +80,7 @@ public class Shuffler {
     }
 
     private void sendToReducers() {
+        print("creating chunks");
         Vector<Context> chunks = createChunks();
         Iterator iterator = config.getReducerIpAddresses().iterator();
         for (Context chunk : chunks) {
@@ -101,7 +102,7 @@ public class Shuffler {
                         e.printStackTrace();
                     }
                 }).start();
-            }else {
+            } else {
                 iterator = config.getReducerIpAddresses().iterator();
             }
         }
@@ -134,10 +135,15 @@ public class Shuffler {
         Vector<Context> chunks = new Vector<>();
         TreeMap tmp;
         for (int i = 0; i < map.size(); i += sizeOfChunk) {
-            if (i + sizeOfChunk >= map.size())
-                chunks.add(new Context(map.tailMap(map.keySet().toArray()[i])));
-            else
-                chunks.add(new Context(map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk])));
+            if (i + sizeOfChunk >= map.size()) {
+                tmp = (TreeMap) map.tailMap(map.keySet().toArray()[i]);
+                chunks.add(new Context(tmp));
+                print(tmp.toString());
+            } else {
+                tmp = (TreeMap) map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
+                chunks.add(new Context(tmp));
+                print(tmp.toString());
+            }
         }
         return chunks;
     }
@@ -150,6 +156,7 @@ public class Shuffler {
         readFromMappers();
         print("read from mappers");
         sort();
+
         sendToReducers();
         print("sent to reducers");
     }

@@ -20,6 +20,7 @@ public abstract class Reducer<K, V> {
             resultIp = objectInputStream.readUTF();
             keys = mapperContext.getMap().keySet();
             print(mapperContext.getMap().toString());
+            context = mapperContext;
             objectInputStream.close();
             shuffler.close();
             serverSocket.close();

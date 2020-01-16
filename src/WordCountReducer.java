@@ -10,6 +10,7 @@ public class WordCountReducer extends Reducer<String, Integer> {
                     }
                     context.write(word, sum);
                 } catch (Exception e) {
+                    print(e.toString() + " context is null");
                     e.printStackTrace();
                 }
             }
