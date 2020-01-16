@@ -49,7 +49,9 @@ public class Input {
                 filled++;
                 counter++;
             }
-            chunks.getLast().addAll((LinkedList<String>) tmp.clone());
+            if (sizeForEachSplit * splits < listOfStrings.size()) {
+                chunks.getLast().addAll((LinkedList<String>) tmp.clone());
+            }
             /*print(sizeForEachSplit*splits + " " + listOfStrings.size());
             if (sizeForEachSplit*splits < listOfStrings.size()) {
                 print("if statement entered");
@@ -57,19 +59,22 @@ public class Input {
                     chunks.getLast().add(listOfStrings.get(i));
                 }
             }
-            */print("chunks : " );
-            for (LinkedList chunk : chunks)print(chunk.toString());
+            */
+            print("chunks : ");
+            for (LinkedList chunk : chunks) print(chunk.toString());
             for (int i = 0; i < splits; i++) {
                 print(mapperIpAddresses.get(i));
                 print(chunks.get(i).toString());
                 new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), chunks.get(i), config).start();
             }
-        }catch (Exception e){print(e.toString());}
+        } catch (Exception e) {
+            print(e.toString());
+        }
     }
 
     private void sendConfigToShuffler() {
         try {
-            Socket shuffler = new Socket(config.getShufflerIp(),Ports.INPUT_SHUFFLER_PORT);
+            Socket shuffler = new Socket(config.getShufflerIp(), Ports.INPUT_SHUFFLER_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             objectOutputStream.writeObject(config);
             objectOutputStream.close();
@@ -79,9 +84,9 @@ public class Input {
         }
     }
 
-    private void sendConfigToResult(){
+    private void sendConfigToResult() {
         try {
-            Socket result = new Socket(config.getResultIp(),Ports.INPUT_RESULT_PORT);
+            Socket result = new Socket(config.getResultIp(), Ports.INPUT_RESULT_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(result.getOutputStream());
             objectOutputStream.writeObject(config);
             objectOutputStream.close();
@@ -91,7 +96,7 @@ public class Input {
         }
     }
 
-    public void start(){
+    public void start() {
         try {
             print(listOfStrings.toString());
             sendConfigToShuffler();
@@ -104,8 +109,8 @@ public class Input {
 
     protected void print(String msg) {
         try {
-            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromInput.txt"),true);
-            fileWriter.write(msg+"\n");
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromInput.txt"), true);
+            fileWriter.write(msg + "\n");
             fileWriter.flush();
             fileWriter.close();
         } catch (FileNotFoundException e) {
