@@ -1,3 +1,5 @@
+import java.util.concurrent.TimeUnit;
+
 public class WordCountReducer extends Reducer<String, Integer> {
     @Override
     protected void reduce() {
@@ -11,6 +13,12 @@ public class WordCountReducer extends Reducer<String, Integer> {
                     context.write(word, sum);
                 } catch (Exception e) {
                     print(e.toString() + " context is null");
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                    reduce();
                     e.printStackTrace();
                 }
             }

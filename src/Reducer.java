@@ -37,7 +37,7 @@ public abstract class Reducer<K, V> {
     protected Iterable<V> getValuesFor(K key) throws Exception {
         if (mapperContext == null)
             throw new Exception("context has not been initialized"); //TODO context has not been initialized exception
-        return context.getMap().get(key);
+        return mapperContext.getMap().get(key);
     }
 
     private void sendToResult() {
