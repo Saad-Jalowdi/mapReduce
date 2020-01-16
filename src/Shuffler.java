@@ -90,7 +90,7 @@ public class Shuffler {
                         String ip = (String) finalIterator.next();
                         Socket reducer = new Socket(ip, Ports.SHUFFLER_REDUCER_PORT);
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(reducer.getOutputStream());
-                        print("sending "+chunk.getMap().toString() +" to "+reducer.getInetAddress());
+                        print("sending " + chunk.getMap().toString() + " to " + reducer.getInetAddress());
                         objectOutputStream.writeObject(chunk);
                         objectOutputStream.writeUTF(config.getResultIp());
                         objectOutputStream.close();
@@ -128,25 +128,32 @@ public class Shuffler {
     }
 
     private Vector<Context> createChunks() {
-        int numOfChunks = config.getReducerNodes();
-        int sizeOfChunk = map.size() / numOfChunks;
-        Vector<Context> chunks = new Vector<>();
-        Map tmp;
-        for (int i = 0; i < map.size(); i += sizeOfChunk) {
-            if (i + sizeOfChunk >= map.size()) {
-                tmp = map.tailMap(map.keySet().toArray()[i]);
-            } else {
-                tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
+        try {
+            int numOfChunks = config.getReducerNodes();
+            int sizeOfChunk = map.size() / numOfChunks;
+            Vector<Context> chunks = new Vector<>();
+            Map tmp;
+            for (int i = 0; i < map.size(); i += sizeOfChunk) {
+                if (i + sizeOfChunk >= map.size()) {
+                    tmp = map.tailMap(map.keySet().toArray()[i]);
+                } else {
+                    tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
+                }
+                if (sizeOfChunk * numOfChunks <= map.size() && chunks.size() != numOfChunks) {
+                    chunks.add(new Context((SortedMap) tmp));
+                } else {
+                    chunks.get(chunks.size() - 1).getMap().putAll(tmp);
+                }
+                //chunks.add(new Context((SortedMap) tmp));
+                print(tmp.toString());
             }
-            if (sizeOfChunk * numOfChunks <= map.size() && chunks.size() != numOfChunks) {
-                chunks.add(new Context((SortedMap) tmp));
-            } else {
-                chunks.get(chunks.size()-1).getMap().putAll(tmp);
-            }
-            //chunks.add(new Context((SortedMap) tmp));
-            print(tmp.toString());
+            return chunks;
+        }catch (Exception e){
+            print(e.toString());
+            System.exit(1);
         }
-        return chunks;
+        return null;
+
     }
 
 
