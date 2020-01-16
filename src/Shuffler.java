@@ -50,11 +50,13 @@ public class Shuffler {
                         }
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
+                        print(e.getStackTrace().toString());
                     }
                 }).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
+            print(e.getStackTrace().toString());
         }
     }
 
