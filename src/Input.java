@@ -38,7 +38,6 @@ public class Input {
             int size = listOfStrings.size();
             int sizeForEachSplit = size / splits;
             int counter = 0;
-            int filled = 0;
             for (String s : listOfStrings) {
                 if (counter == sizeForEachSplit) {
                     chunks.add((LinkedList<String>) tmp.clone());
@@ -46,10 +45,9 @@ public class Input {
                     counter = 0;
                 }
                 tmp.add(s);
-                filled++;
                 counter++;
             }
-            if (sizeForEachSplit * splits < listOfStrings.size()) {
+            if (sizeForEachSplit * splits <= listOfStrings.size()) {
                 chunks.getLast().addAll((LinkedList<String>) tmp.clone());
             }
             /*print(sizeForEachSplit*splits + " " + listOfStrings.size());
