@@ -138,7 +138,12 @@ public class Shuffler {
             } else {
                 tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
             }
-            chunks.add(new Context((SortedMap) tmp));
+            if (sizeOfChunk * numOfChunks <= map.size() && chunks.size() != numOfChunks) {
+                chunks.add(new Context((SortedMap) tmp));
+            } else {
+                chunks.get(chunks.size()-1).getMap().putAll(tmp);
+            }
+            //chunks.add(new Context((SortedMap) tmp));
             print(tmp.toString());
         }
         return chunks;
