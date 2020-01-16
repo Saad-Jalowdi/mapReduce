@@ -134,21 +134,21 @@ public class Shuffler {
             Vector<Context> chunks = new Vector<>();
             Map tmp;
             for (int i = 0; i < map.size(); i += sizeOfChunk) {
-                /*if (i + sizeOfChunk >= map.size()) {
+                if (i + sizeOfChunk*2 >= map.size()) {
                     tmp = map.tailMap(map.keySet().toArray()[i]);
                 } else {
                     tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
-                }*/
+                }
                 /*if (sizeOfChunk * numOfChunks <= map.size() && chunks.size() != numOfChunks) {
                     chunks.add(new Context((SortedMap) tmp));
                 } else {
                     chunks.get(chunks.size() - 1).getMap().putAll(tmp);
                 }*/
-                if (sizeOfChunk * chunks.size() <= map.size() && chunks.size() != numOfChunks) {
+                /*if (sizeOfChunk * chunks.size() <= map.size() && chunks.size() != numOfChunks) {
                     tmp = map.tailMap(map.keySet().toArray()[i]);
                 } else {
                     tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
-                }
+                }*/
                 chunks.add(new Context((SortedMap) tmp));
                 print(tmp.toString());
             }
