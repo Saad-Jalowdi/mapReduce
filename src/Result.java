@@ -30,13 +30,15 @@ public class Result {
             ServerSocket serverSocket = new ServerSocket(Ports.REDUCER_RESULT_PORT);
             while (true) {
                 if (contexts.size() == config.getReducerNodes()) break;
-
+                print("waiting for reducers");
                 Socket reducer = serverSocket.accept();
-
+                print(" connection established with : " + reducer.getInetAddress());
                 new Thread(() -> {
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(reducer.getInputStream());
-                        contexts.add((Context) objectInputStream.readObject());
+                        Context context = (Context) objectInputStream.readObject();
+                        print("context received : " + context.getMap().toString() + " from : " + reducer.getInetAddress());
+                        contexts.add(context);
                         if (contexts.size() == config.getReducerNodes()) {
                             serverSocket.close();
                             //TODO LOG this ...
@@ -52,6 +54,7 @@ public class Result {
     }
 
     private void merge() {
+        print("merging...");
         map = new TreeMap();
 
         for (Context context : contexts) {
@@ -71,7 +74,7 @@ public class Result {
 
     private void writeFinalResult() {
         try {
-            File file =  config.getOutputFile();
+            File file = config.getOutputFile();
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             PrintStream printStream = new PrintStream(fileOutputStream);
             map.forEach((k, v) -> printStream.println(k + "," + v));
@@ -82,19 +85,23 @@ public class Result {
 
 
     private void start() {
-        print("hello");
-        readConfig();
-        print("config read");
-        readContext();
-        merge();
-        writeFinalResult();
-        print("actually it finished");
+        try {
+            print("hello");
+            readConfig();
+            print("config read");
+            readContext();
+            merge();
+            writeFinalResult();
+            print("actually it finished");
+        } catch (Exception e) {
+            print(e.toString());
+        }
     }
 
-    protected void print(String msg){
+    protected void print(String msg) {
         try {
-            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromResult.txt"),true);
-            fileWriter.write(msg+"\n");
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromResult.txt"), true);
+            fileWriter.write(msg + "\n");
             fileWriter.flush();
             fileWriter.close();
         } catch (FileNotFoundException e) {
