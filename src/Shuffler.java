@@ -144,7 +144,7 @@ public class Shuffler {
                 } else {
                     chunks.get(chunks.size() - 1).getMap().putAll(tmp);
                 }*/
-                if (sizeOfChunk * numOfChunks <= map.size() && chunks.size() != numOfChunks) {
+                if (sizeOfChunk * chunks.size() <= map.size() && chunks.size() != numOfChunks) {
                     tmp = map.tailMap(map.keySet().toArray()[i]);
                 } else {
                     tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
@@ -154,7 +154,7 @@ public class Shuffler {
             }
             return chunks;
         }catch (Exception e){
-            print(e.toString());
+            print(e.getStackTrace().toString());
             System.exit(1);
         }
         return null;
