@@ -81,6 +81,7 @@ public class Input {
 
     public void start(){
         try {
+            print(listOfStrings.toString());
             sendConfigToShuffler();
             sendConfigToResult();
             split();
