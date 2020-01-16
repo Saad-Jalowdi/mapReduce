@@ -20,7 +20,6 @@ public abstract class Reducer<K, V> {
             resultIp = objectInputStream.readUTF();
             keys = mapperContext.getMap().keySet();
             print(mapperContext.getMap().toString());
-            context = mapperContext;
             objectInputStream.close();
             shuffler.close();
             serverSocket.close();
@@ -36,7 +35,7 @@ public abstract class Reducer<K, V> {
     }
 
     protected Iterable<V> getValuesFor(K key) throws Exception {
-        if (context == null)
+        if (mapperContext == null)
             throw new Exception("context has not been initialized"); //TODO context has not been initialized exception
         return context.getMap().get(key);
     }
