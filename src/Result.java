@@ -38,6 +38,7 @@ public class Result {
                     print("entered thread");
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(reducer.getInputStream());
+                        print("before reading object");
                         Context context = (Context) objectInputStream.readObject();
                         print("context received : " + context.getMap().toString() + " from : " + reducer.getInetAddress());
                         contexts.add(context);
