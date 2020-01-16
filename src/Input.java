@@ -47,7 +47,9 @@ public class Input {
                 tmp.add(s);
                 counter++;
             }
-            if (sizeForEachSplit * splits <= listOfStrings.size()) {
+            if (sizeForEachSplit * splits <= listOfStrings.size() && chunks.size() != splits) {
+                chunks.add((LinkedList<String>) tmp.clone());
+            } else {
                 chunks.getLast().addAll((LinkedList<String>) tmp.clone());
             }
             /*print(sizeForEachSplit*splits + " " + listOfStrings.size());
