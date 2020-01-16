@@ -44,7 +44,7 @@ public abstract class Reducer<K, V> {
         try {
             Socket result = new Socket(resultIp, Ports.REDUCER_RESULT_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(result.getOutputStream());
-            objectOutputStream.writeObject(context.getMap());
+            objectOutputStream.writeObject(context);
             print(context.getMap().toString());
             objectOutputStream.close();
             result.close();
