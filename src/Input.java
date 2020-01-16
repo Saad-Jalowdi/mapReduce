@@ -48,6 +48,7 @@ public class Input {
             filled++;
             counter++;
         }
+        print(filled + " " + listOfStrings.size());
         if (filled<listOfStrings.size()){
             for (int i = filled; i < listOfStrings.size() ; i++){
                 tmp.add(listOfStrings.get(i));
