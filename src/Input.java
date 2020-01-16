@@ -50,7 +50,9 @@ public class Input {
                 counter++;
             }
             chunks.add((LinkedList<String>) tmp.clone());
-            if (sizeForEachSplit*splits != listOfStrings.size()) {
+            print(sizeForEachSplit*splits + " " + listOfStrings.size());
+            if (sizeForEachSplit*splits < listOfStrings.size()) {
+                print("if statement entered");
                 for (int i = sizeForEachSplit*splits; i < listOfStrings.size(); i++) {
                     chunks.getLast().add(listOfStrings.get(i));
                 }
