@@ -31,36 +31,37 @@ public class Input {
     }
 
     private void split() throws IOException {
-        int splits = config.getMapperNodes();
-        LinkedList<LinkedList<String>> chunks = new LinkedList<>();
-        LinkedList<String> tmp = new LinkedList<>();
-        int size = listOfStrings.size();
-        int sizeForEachSplit = size / splits;
-        int counter = 0;
-        int filled = 0;
-        for (String s : listOfStrings) {
-            if (counter == sizeForEachSplit) {
-                chunks.add((LinkedList<String>) tmp.clone());
-                tmp.clear();
-                counter = 0;
+        try {
+            int splits = config.getMapperNodes();
+            LinkedList<LinkedList<String>> chunks = new LinkedList<>();
+            LinkedList<String> tmp = new LinkedList<>();
+            int size = listOfStrings.size();
+            int sizeForEachSplit = size / splits;
+            int counter = 0;
+            int filled = 0;
+            for (String s : listOfStrings) {
+                if (counter == sizeForEachSplit) {
+                    chunks.add((LinkedList<String>) tmp.clone());
+                    tmp.clear();
+                    counter = 0;
+                }
+                tmp.add(s);
+                filled++;
+                counter++;
             }
-            tmp.add(s);
-            filled++;
-            counter++;
-        }
-        print(filled + " " + listOfStrings.size());
-        if (filled<listOfStrings.size()){
-            for (int i = filled; i < listOfStrings.size() ; i++){
-                tmp.add(listOfStrings.get(i));
+            print(filled + " " + listOfStrings.size());
+            if (filled < listOfStrings.size()) {
+                for (int i = filled; i < listOfStrings.size(); i++) {
+                    tmp.add(listOfStrings.get(i));
+                }
             }
-        }
-        chunks.add((LinkedList<String>) tmp.clone());
-        for (int i = 0; i < splits; i++) {
-            print(mapperIpAddresses.get(i));
-            print(chunks.get(i).toString());
-            new Splitter(new Socket(mapperIpAddresses.get(i),Ports.SPLITTER_MAPPER_PORT),chunks.get(i), config).start();
-        }
-
+            chunks.add((LinkedList<String>) tmp.clone());
+            for (int i = 0; i < splits; i++) {
+                print(mapperIpAddresses.get(i));
+                print(chunks.get(i).toString());
+                new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), chunks.get(i), config).start();
+            }
+        }catch (Exception e){print(e.toString());}
     }
 
     private void sendConfigToShuffler() {
