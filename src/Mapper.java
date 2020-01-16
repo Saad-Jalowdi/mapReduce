@@ -53,6 +53,7 @@ public abstract class Mapper<K extends Comparable, V> {
         print("done mapping");
         TimeUnit.SECONDS.sleep(5);
         sendToShuffler();
+        TimeUnit.SECONDS.sleep(5);
         print("sent to shuffler");
 
     }
