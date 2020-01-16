@@ -82,8 +82,10 @@ public class Shuffler {
     private void sendToReducers() {
         print("creating chunks");
         Vector<Context> chunks = createChunks();
+        print("chunks created");
         Iterator iterator = config.getReducerIpAddresses().iterator();
         for (Context chunk : chunks) {
+            print("chunk : " + chunk.getMap().toString());
             if (iterator.hasNext()) {
                 Iterator finalIterator = iterator;
                 new Thread(() -> {
@@ -96,7 +98,6 @@ public class Shuffler {
                         objectOutputStream.writeUTF(config.getResultIp());
                         objectOutputStream.close();
                         reducer.close();
-
                     } catch (IOException e) {
                         print(e.toString());
                         e.printStackTrace();
@@ -156,7 +157,6 @@ public class Shuffler {
         readFromMappers();
         print("read from mappers");
         sort();
-
         sendToReducers();
         print("sent to reducers");
     }
