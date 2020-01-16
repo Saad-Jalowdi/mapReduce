@@ -134,7 +134,7 @@ public class Shuffler {
             Vector<Context> chunks = new Vector<>();
             Map tmp;
             for (int i = 0; i < map.size(); i += sizeOfChunk) {
-                if (i + sizeOfChunk*2 >= map.size()) {
+                if (i + sizeOfChunk * 2 >= map.size()) {
                     tmp = map.tailMap(map.keySet().toArray()[i]);
                 } else {
                     tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
@@ -153,7 +153,7 @@ public class Shuffler {
                 print(tmp.toString());
             }
             return chunks;
-        }catch (Exception e){
+        } catch (Exception e) {
             print(e.getStackTrace().toString());
             System.exit(1);
         }
@@ -163,14 +163,18 @@ public class Shuffler {
 
 
     public void start() {
-        print("hello");
-        readConfig();
-        print("read config");
-        readFromMappers();
-        print("read from mappers");
-        sort();
-        sendToReducers();
-        print("sent to reducers");
+        try {
+            print("hello");
+            readConfig();
+            print("read config");
+            readFromMappers();
+            print("read from mappers");
+            sort();
+            sendToReducers();
+            print("sent to reducers");
+        }catch (Exception e){
+            print(e.getStackTrace().toString());
+        }
     }
 
     protected void print(String msg) {
