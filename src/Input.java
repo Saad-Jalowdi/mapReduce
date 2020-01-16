@@ -81,9 +81,9 @@ public class Input {
 
     public void start(){
         try {
-            split();
             sendConfigToShuffler();
             sendConfigToResult();
+            split();
         } catch (Exception e) {
             e.printStackTrace();
         }

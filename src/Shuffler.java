@@ -1,10 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.TreeMap;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Shuffler {
@@ -131,25 +128,20 @@ public class Shuffler {
     }
 
     private Vector<Context> createChunks() {
-        try {
-            int numOfChunks = config.getReducerNodes();
-            int sizeOfChunk = map.size() / numOfChunks;
-            Vector<Context> chunks = new Vector<>();
-            TreeMap tmp;
-            for (int i = 0; i < map.size(); i += sizeOfChunk) {
-                if (i + sizeOfChunk >= map.size()) {
-                    tmp = (TreeMap) map.tailMap(map.keySet().toArray()[i]);
-                } else {
-                    tmp = (TreeMap) map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
-                }
-                chunks.add(new Context(tmp));
-                print(tmp.toString());
+        int numOfChunks = config.getReducerNodes();
+        int sizeOfChunk = map.size() / numOfChunks;
+        Vector<Context> chunks = new Vector<>();
+        Map tmp;
+        for (int i = 0; i < map.size(); i += sizeOfChunk) {
+            if (i + sizeOfChunk >= map.size()) {
+                tmp = map.tailMap(map.keySet().toArray()[i]);
+            } else {
+                tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
             }
-            return chunks;
-        } catch (Exception e) {
-            print(e.toString());
+            chunks.add(new Context((SortedMap) tmp));
+            print(tmp.toString());
         }
-        return null;
+        return chunks;
     }
 
 
