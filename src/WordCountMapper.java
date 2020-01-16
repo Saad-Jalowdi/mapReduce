@@ -1,9 +1,10 @@
 
-public class WordCountMapper extends Mapper<String,Integer>{
+public class WordCountMapper extends Mapper<String, Integer> {
     @Override
     public void map() {
-        for (String word : data){
-            context.write(word,1);
+        for (String word : data) {
+            if (word.matches("[a-zA-Z]+"))
+                context.write(word, 1);
         }
     }
 
