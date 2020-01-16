@@ -131,22 +131,25 @@ public class Shuffler {
     }
 
     private Vector<Context> createChunks() {
-        int numOfChunks = config.getReducerNodes();
-        int sizeOfChunk = map.size() / numOfChunks;
-        Vector<Context> chunks = new Vector<>();
-        TreeMap tmp;
-        for (int i = 0; i < map.size(); i += sizeOfChunk) {
-            if (i + sizeOfChunk >= map.size()) {
-                tmp = (TreeMap) map.tailMap(map.keySet().toArray()[i]);
-                chunks.add(new Context(tmp));
-                print(tmp.toString());
-            } else {
-                tmp = (TreeMap) map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
+        try {
+            int numOfChunks = config.getReducerNodes();
+            int sizeOfChunk = map.size() / numOfChunks;
+            Vector<Context> chunks = new Vector<>();
+            TreeMap tmp;
+            for (int i = 0; i < map.size(); i += sizeOfChunk) {
+                if (i + sizeOfChunk >= map.size()) {
+                    tmp = (TreeMap) map.tailMap(map.keySet().toArray()[i]);
+                } else {
+                    tmp = (TreeMap) map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
+                }
                 chunks.add(new Context(tmp));
                 print(tmp.toString());
             }
+            return chunks;
+        } catch (Exception e) {
+            print(e.toString());
         }
-        return chunks;
+        return null;
     }
 
 
