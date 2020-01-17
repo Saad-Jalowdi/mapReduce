@@ -128,7 +128,7 @@ public class Shuffler {
                 chunks.add(new Context((SortedMap) tmp));
                 print(tmp.toString());
             }
-            for (int i = map.size() ; i < config.getReducerNodes();i++){
+            for (int i = numOfChunks ; i < config.getReducerNodes()-numOfChunks;i++){
                 chunks.add(new Context());
             }
             return chunks;

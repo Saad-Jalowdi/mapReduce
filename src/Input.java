@@ -62,7 +62,7 @@ public class Input {
                 log(chunks.get(i).toString());
                 new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), chunks.get(i), config).start();
             }
-            for (int i = splits ; i < config.getReducerNodes()-splits ; i++){
+            for (int i = splits ; i < config.getMapperNodes()-splits ; i++){
                 new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), new LinkedList<>(), config).start();
             }
         } catch (Exception e) {
