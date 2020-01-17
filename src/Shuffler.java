@@ -110,31 +110,12 @@ public class Shuffler {
             }
         }
 
-        /*Iterator iterator = chunks.iterator();
-
-        for (String ip : config.getReducerIpAddresses()) {
-
-            new Thread(() -> {
-                try {
-                    Context chunk = (Context) iterator.next();
-                    Socket reducer = new Socket(ip, Ports.SHUFFLER_REDUCER_PORT);
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(reducer.getOutputStream());
-                    print(chunk.getMap().toString());
-                    objectOutputStream.writeObject(chunk);
-                    objectOutputStream.writeUTF(config.getResultIp());
-                    objectOutputStream.close();
-                    reducer.close();
-                } catch (IOException e) {
-                    print(e.toString());
-                    e.printStackTrace();
-                }
-            }).start();
-        }*/
     }
 
     private Vector<Context> createChunks() {
         try {
             int numOfChunks = config.getReducerNodes();
+            if (map.size()<numOfChunks)numOfChunks=map.size();
             int sizeOfChunk = map.size() / numOfChunks;
             Vector<Context> chunks = new Vector<>();
             Map tmp;
@@ -144,18 +125,11 @@ public class Shuffler {
                 } else {
                     tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
                 }
-                /*if (sizeOfChunk * numOfChunks <= map.size() && chunks.size() != numOfChunks) {
-                    chunks.add(new Context((SortedMap) tmp));
-                } else {
-                    chunks.get(chunks.size() - 1).getMap().putAll(tmp);
-                }*/
-                /*if (sizeOfChunk * chunks.size() <= map.size() && chunks.size() != numOfChunks) {
-                    tmp = map.tailMap(map.keySet().toArray()[i]);
-                } else {
-                    tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
-                }*/
                 chunks.add(new Context((SortedMap) tmp));
                 print(tmp.toString());
+            }
+            for (int i = map.size() ; i < config.getReducerNodes();i++){
+                chunks.add(new Context());
             }
             return chunks;
         } catch (Exception e) {

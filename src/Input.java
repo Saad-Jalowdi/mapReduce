@@ -2,8 +2,10 @@ import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class Input {
+    private final transient Logger logger = Logger.getLogger(Input.class.getName());
     private File inputFile;
     private Configuration config;
     private LinkedList<String> listOfStrings = new LinkedList<>();
@@ -33,6 +35,7 @@ public class Input {
     private void split() throws IOException {
         try {
             int splits = config.getMapperNodes();
+            if (listOfStrings.size() < splits) {splits = listOfStrings.size();}
             LinkedList<LinkedList<String>> chunks = new LinkedList<>();
             LinkedList<String> tmp = new LinkedList<>();
             int size = listOfStrings.size();
@@ -52,23 +55,18 @@ public class Input {
             } else {
                 chunks.getLast().addAll((LinkedList<String>) tmp.clone());
             }
-            /*print(sizeForEachSplit*splits + " " + listOfStrings.size());
-            if (sizeForEachSplit*splits < listOfStrings.size()) {
-                print("if statement entered");
-                for (int i = sizeForEachSplit*splits; i < listOfStrings.size(); i++) {
-                    chunks.getLast().add(listOfStrings.get(i));
-                }
-            }
-            */
-            print("chunks : ");
-            for (LinkedList chunk : chunks) print(chunk.toString());
+            log("chunks : ");
+            for (LinkedList chunk : chunks) log(chunk.toString());
             for (int i = 0; i < splits; i++) {
-                print(mapperIpAddresses.get(i));
-                print(chunks.get(i).toString());
+                log(mapperIpAddresses.get(i));
+                log(chunks.get(i).toString());
                 new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), chunks.get(i), config).start();
             }
+            for (int i = splits ; i < config.getReducerNodes()-splits ; i++){
+                new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), new LinkedList<>(), config).start();
+            }
         } catch (Exception e) {
-            print(e.toString());
+            log(e.toString());
         }
     }
 
@@ -98,7 +96,7 @@ public class Input {
 
     public void start() {
         try {
-            print(listOfStrings.toString());
+            log(listOfStrings.toString());
             sendConfigToShuffler();
             sendConfigToResult();
             split();
@@ -107,7 +105,7 @@ public class Input {
         }
     }
 
-    protected void print(String msg) {
+    protected void log(String msg) {
         try {
             FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromInput.txt"), true);
             fileWriter.write(msg + "\n");
