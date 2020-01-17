@@ -1,10 +1,17 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WordCountMapper extends Mapper<String, Integer> {
     @Override
     public void map() {
-        for (String word : data) {
-            if (word.matches("[a-zA-Z]+"))
+        Pattern pattern = Pattern.compile("[a-zA-Z]+");
+        Matcher matcher;
+        for (String str : data) {
+            matcher = pattern.matcher(str);
+            if (matcher.find()) {
+                String word = matcher.group();
                 context.write(word, 1);
+            }
         }
     }
 
