@@ -8,7 +8,7 @@ public class WordCountMapper extends Mapper<String, Integer> {
         Matcher matcher;
         for (String str : data) {
             matcher = pattern.matcher(str);
-            if (matcher.find()) {
+            while (matcher.find()) {
                 String word = matcher.group();
                 context.write(word, 1);
             }
