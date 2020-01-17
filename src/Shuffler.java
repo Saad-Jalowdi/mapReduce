@@ -115,7 +115,7 @@ public class Shuffler {
     private Vector<Context> createChunks() {
         try {
             int numOfChunks = config.getReducerNodes();
-            if (map.size()<numOfChunks)numOfChunks=map.size();
+            if (map.size()<numOfChunks)numOfChunks=map.size();//throw new Exception();//too many reducer for such an input you need map.size() reducers or less ...
             int sizeOfChunk = map.size() / numOfChunks;
             Vector<Context> chunks = new Vector<>();
             Map tmp;
@@ -128,7 +128,7 @@ public class Shuffler {
                 chunks.add(new Context((SortedMap) tmp));
                 print(tmp.toString());
             }
-            for (int i = numOfChunks ; i < config.getReducerNodes()-numOfChunks;i++){
+            for (int i = map.size();i<config.getReducerNodes();i++){
                 chunks.add(new Context());
             }
             return chunks;
