@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -26,7 +27,11 @@ public class PerformanceLogger {
 
     public void log() {
         try {
-            FileWriter fileWriter = new FileWriter("map_reduce/performance_for_"+loggerName);
+            File file = new File("/map_reduce/performance_for_"+loggerName+".txt");
+            if (!file.exists()){
+                file.createNewFile();
+            }
+            FileWriter fileWriter = new FileWriter("/map_reduce/performance_for_"+loggerName+".txt");
             fileWriter.write(endingTime.subtract(startingTime).toString()+"ms");
             fileWriter.flush();
             fileWriter.close();

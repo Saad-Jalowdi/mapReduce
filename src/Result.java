@@ -108,7 +108,11 @@ public class Result {
 
     protected void print(String msg) {
         try {
-            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromResult.txt"), true);
+            File file = new File("/map_reduce/log_result.txt");
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            FileWriter fileWriter = new FileWriter(file, true);
             fileWriter.write(msg + "\n");
             fileWriter.flush();
             fileWriter.close();
