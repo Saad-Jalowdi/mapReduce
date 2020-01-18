@@ -33,7 +33,10 @@ public class Shuffler {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.MAPPER_SHUFFLER_PORT);
             while (true) {
-                if (contexts.size() == config.getMapperNodes()) break;
+                if (contexts.size() == config.getMapperNodes()) {
+                    finished = true;
+                    break;
+                }
                 print("waiting for mappers");
                 Socket mapper = serverSocket.accept();
                 print("connected with " + mapper.getInetAddress());
@@ -47,6 +50,7 @@ public class Shuffler {
                         print(context.getMap().toString());
                         contexts.add(context);
                         if (contexts.size() == config.getMapperNodes()) {
+                            finished = true;
                             objectInputStream.close();
                             mapper.close();
                             serverSocket.close();
@@ -62,7 +66,6 @@ public class Shuffler {
             e.printStackTrace();
             print(e.getStackTrace().toString());
         }
-        finished = true;
     }
 
     private void sort() {
@@ -150,8 +153,8 @@ public class Shuffler {
             new Thread(() -> readConfig()).start();
             print("read config");
             new Thread(() -> readFromMappers()).start();
-            print("read from mappers");
             while (!finished) ;
+            print("read from mappers");
             sort();
             sendToReducers();
             print("sent to reducers");
@@ -173,9 +176,8 @@ public class Shuffler {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args)  {
         new Shuffler().start();
-        TimeUnit.MINUTES.sleep(1);
 
     }
 
