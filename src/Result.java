@@ -123,7 +123,6 @@ public class Result {
 
     public static void main(String[] args) throws InterruptedException {
         new Result().start();
-        TimeUnit.MINUTES.sleep(1);
 
     }
 }
