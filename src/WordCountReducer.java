@@ -1,5 +1,3 @@
-import com.mapreduce.base.Reducer;
-
 import java.util.concurrent.TimeUnit;
 
 public class WordCountReducer extends Reducer<String, Integer> {
@@ -25,8 +23,5 @@ public class WordCountReducer extends Reducer<String, Integer> {
         }
     }
 
-    public static void main(String[] args) {
-        new WordCountReducer().start();
-    }
 }
 

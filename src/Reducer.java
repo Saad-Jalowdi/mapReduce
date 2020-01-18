@@ -1,7 +1,3 @@
-package com.mapreduce.base;
-
-import com.mapreduce.utils.Ports;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -59,7 +55,7 @@ public abstract class Reducer<K, V> {
         }
     }
 
-    protected void start() {
+    public void start() {
         try {
             print("hello ");
             readContext();

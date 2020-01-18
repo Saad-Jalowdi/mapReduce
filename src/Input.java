@@ -1,7 +1,3 @@
-package com.mapreduce.utils;
-
-import com.mapreduce.utils.Configuration;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;

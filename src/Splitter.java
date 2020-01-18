@@ -1,5 +1,3 @@
-package com.mapreduce.utils;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;

@@ -1,5 +1,3 @@
-package com.mapreduce.base;
-
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.SortedMap;

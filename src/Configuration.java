@@ -1,5 +1,3 @@
-package com.mapreduce.utils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;

@@ -1,5 +1,3 @@
-import com.mapreduce.base.Mapper;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,10 +13,6 @@ public class WordCountMapper extends Mapper<String, Integer> {
                 context.write(word, 1);
             }
         }
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        new WordCountMapper().start();
     }
 
 }

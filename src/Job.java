@@ -1,16 +1,11 @@
-package com.mapreduce.utils;
-
-import com.mapreduce.base.Mapper;
-import com.mapreduce.base.Reducer;
-
 import java.io.*;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Job {
 
-    private Class mapperClass;
-    private Class reducerClass;
+    private Mapper mapper;
+    private Reducer reducer;
     private Configuration configuration;
     private Input input;
 
@@ -18,7 +13,19 @@ public class Job {
         this.configuration = configuration;
     }
 
-    public void setMapperClass(Class mapperClass) {
+    public void setMapper(Mapper mapper) {
+        this.mapper = mapper;
+        mapper.start();
+    }
+
+    public void setReducer(Reducer reducer) {
+        this.reducer = reducer;
+        reducer.start();
+    }
+
+
+    /*
+    public void setMapperClass(Mapper mapperClass) {
         this.mapperClass = mapperClass;
         try {
             validateMapper();
@@ -61,7 +68,7 @@ public class Job {
             throw new Exception("not a reducer exception"); //TODO change it to NotReducerException
 
         }
-    }
+    }*/
 
     private boolean containersCreated(String s) throws InterruptedException, FileNotFoundException {
         while (!new File("/map_reduce/" + s).exists()) {

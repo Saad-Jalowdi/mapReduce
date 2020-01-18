@@ -1,6 +1,3 @@
-import com.mapreduce.utils.Configuration;
-import com.mapreduce.utils.Job;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,8 +16,8 @@ public class Driver {
                     + "\n"+ configuration.getMapperNodes()+ "\n"+ configuration.getReducerNodes()
             );
             Job job = new Job(configuration);
-            job.setMapperClass(WordCountMapper.class);
-            job.setReducerClass(WordCountReducer.class);
+            job.setMapper(new WordCountMapper());
+            job.setReducer(new WordCountReducer());
             job.start();
             print("testing");
 

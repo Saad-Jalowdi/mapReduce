@@ -1,7 +1,3 @@
-package com.mapreduce.utils;
-
-import com.mapreduce.base.Context;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
