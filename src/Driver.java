@@ -16,8 +16,8 @@ public class Driver {
                     + "\n"+ configuration.getMapperNodes()+ "\n"+ configuration.getReducerNodes()
             );
             Job job = new Job(configuration);
-            job.setMapper(new WordCountMapper());
-            job.setReducer(new WordCountReducer());
+            job.setReducerClass(WordCountMapper.class);
+            job.setReducerClass(WordCountReducer.class);
             job.start();
             print("testing");
 
