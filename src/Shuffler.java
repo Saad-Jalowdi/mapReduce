@@ -150,9 +150,9 @@ public class Shuffler {
     public void start() {
         try {
             print("hello");
-            new Thread(() -> readConfig()).start();
+            readConfig();
             print("read config");
-            new Thread(() -> readFromMappers()).start();
+            readFromMappers();
             while (!finished) ;
             print("read from mappers");
             sort();
