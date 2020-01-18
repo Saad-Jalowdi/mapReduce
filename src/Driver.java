@@ -1,3 +1,6 @@
+import com.mapreduce.utils.Configuration;
+import com.mapreduce.utils.Job;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

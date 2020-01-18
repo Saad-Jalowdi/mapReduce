@@ -1,3 +1,7 @@
+package com.mapreduce.base;
+
+import com.mapreduce.utils.Ports;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -75,7 +79,7 @@ public abstract class Reducer<K, V> {
 
     protected void print(String msg) {
         try {
-            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromReducer.txt"), true);
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/log_reducer.txt"), true);
             fileWriter.write(msg + "\n");
             fileWriter.flush();
             fileWriter.close();

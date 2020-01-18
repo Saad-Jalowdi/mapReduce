@@ -1,3 +1,5 @@
+package com.mapreduce.utils;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -17,7 +19,7 @@ public class Splitter extends Thread{
     public void run() {
         try(final ObjectOutputStream objectOutputStream = new ObjectOutputStream(mapper.getOutputStream())){
             objectOutputStream.writeObject(chunk);
-            print(chunk.toString());
+            log(chunk.toString());
             objectOutputStream.writeObject(config);
             mapper.close();
         } catch (IOException e) {
@@ -25,9 +27,9 @@ public class Splitter extends Thread{
         }
     }
 
-    protected void print(String msg) {
+    private void log(String msg) {
         try {
-            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromSplitter.txt"),true);
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/log_splitter.txt"),true);
             fileWriter.write(msg+"\n");
             fileWriter.flush();
             fileWriter.close();

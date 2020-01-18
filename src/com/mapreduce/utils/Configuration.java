@@ -1,7 +1,9 @@
+package com.mapreduce.utils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -10,8 +12,8 @@ public class Configuration implements Serializable {
     private File outputFile;
     private int mapperNodes;
     private int reducerNodes;
-    private LinkedList<String> mapperIpAddresses = new LinkedList<>();
-    private LinkedList<String> reducerIpAddresses = new LinkedList<>();
+    private ArrayList<String> mapperIpAddresses = new ArrayList<>();
+    private ArrayList<String> reducerIpAddresses = new ArrayList<>();
     private String shufflerIp;
     private String resultIp;
 
@@ -35,7 +37,7 @@ public class Configuration implements Serializable {
     private void readAddresses(String pathname) throws Exception {
         try {
             Scanner scanner = new Scanner(new File(pathname));
-            LinkedList<String> tmp;
+            ArrayList<String> tmp;
             if (pathname.equals("/map_reduce/mapper_ip_addresses.txt")) {
                 waitUntilFileCreated(pathname);
                 tmp = mapperIpAddresses;
@@ -87,11 +89,11 @@ public class Configuration implements Serializable {
     }
 
 
-    public LinkedList<String> getMapperIpAddresses() {
+    public ArrayList<String> getMapperIpAddresses() {
         return mapperIpAddresses;
     }
 
-    public LinkedList<String> getReducerIpAddresses() {
+    public ArrayList<String> getReducerIpAddresses() {
         return reducerIpAddresses;
     }
 

@@ -1,15 +1,18 @@
+package com.mapreduce.utils;
+
+import com.mapreduce.utils.Configuration;
+
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 public class Input {
-    private final transient Logger logger = Logger.getLogger(Input.class.getName());
     private File inputFile;
     private Configuration config;
     private LinkedList<String> listOfStrings = new LinkedList<>();
-    private LinkedList<String> mapperIpAddresses;
+    private ArrayList<String> mapperIpAddresses;
 
     public Input(Configuration config) throws Exception {
         this.config = config;
@@ -107,7 +110,7 @@ public class Input {
 
     protected void log(String msg) {
         try {
-            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromInput.txt"), true);
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/log_input.txt"), true);
             fileWriter.write(msg + "\n");
             fileWriter.flush();
             fileWriter.close();

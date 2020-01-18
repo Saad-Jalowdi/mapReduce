@@ -1,3 +1,5 @@
+package com.mapreduce.utils;
+
 public class Ports {
     public static final int SPLITTER_MAPPER_PORT = 5000;
     public static final int INPUT_SHUFFLER_PORT = 6000;

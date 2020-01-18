@@ -1,3 +1,7 @@
+package com.mapreduce.utils;
+
+import com.mapreduce.base.Context;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -158,7 +162,7 @@ public class Shuffler {
 
     protected void print(String msg) {
         try {
-            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromShuffler.txt"), true);
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/log_shuffler.txt"), true);
             fileWriter.write(msg + "\n");
             fileWriter.flush();
             fileWriter.close();

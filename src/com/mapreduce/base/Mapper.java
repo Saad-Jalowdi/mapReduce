@@ -1,3 +1,8 @@
+package com.mapreduce.base;
+
+import com.mapreduce.utils.Configuration;
+import com.mapreduce.utils.Ports;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,14 +19,14 @@ public abstract class Mapper<K extends Comparable, V> {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.SPLITTER_MAPPER_PORT);
             Socket splitter = serverSocket.accept();
-            print("connected with" + splitter.getInetAddress());
+            log("connected with" + splitter.getInetAddress());
             ObjectInputStream objectInputStream = new ObjectInputStream(splitter.getInputStream());
             data = (LinkedList<String>) objectInputStream.readObject();
             config = (Configuration) objectInputStream.readObject();
             objectInputStream.close();
             splitter.close();
             serverSocket.close();
-            print("read data finished");
+            log("read data finished");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -32,35 +37,35 @@ public abstract class Mapper<K extends Comparable, V> {
 
     private void sendToShuffler() {
         try {
-            print(config.getShufflerIp());
+            log(config.getShufflerIp());
             Socket shuffler = new Socket(config.getShufflerIp(), Ports.MAPPER_SHUFFLER_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             objectOutputStream.writeObject(context);
-            print(context.getMap().toString());
+            log(context.getMap().toString());
             objectOutputStream.close();
             shuffler.close();
         } catch (IOException e) {
-            print(e.toString());
+            log(e.toString());
             e.printStackTrace();
         }
     }
 
     public void start() throws InterruptedException {
-        print("mapper started");
+        log("mapper started");
         readData();
-        print(data.toString());
+        log(data.toString());
         map();
-        print("done mapping");
+        log("done mapping");
         TimeUnit.SECONDS.sleep(5);
         sendToShuffler();
         TimeUnit.SECONDS.sleep(5);
-        print("sent to shuffler");
+        log("sent to shuffler");
 
     }
 
-    protected void print(String msg) {
+    protected void log(String msg) {
         try {
-            FileWriter fileWriter = new FileWriter(new File("/map_reduce/msgFromMapper.txt"),true);
+            FileWriter fileWriter = new FileWriter(new File("/map_reduce/log_mapper.txt"),true);
             fileWriter.write(msg+"\n");
             fileWriter.flush();
             fileWriter.close();
