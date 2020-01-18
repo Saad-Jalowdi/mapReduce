@@ -8,6 +8,7 @@ public class Shuffler {
     private Vector<Context> contexts = new Vector<>();
     private TreeMap map;
     private Configuration config;
+    private boolean finished = false;
 
     public Shuffler() {
 
@@ -61,6 +62,7 @@ public class Shuffler {
             e.printStackTrace();
             print(e.getStackTrace().toString());
         }
+        finished = true;
     }
 
     private void sort() {
@@ -115,7 +117,8 @@ public class Shuffler {
     private Vector<Context> createChunks() {
         try {
             int numOfChunks = config.getReducerNodes();
-            if (map.size()<numOfChunks)numOfChunks=map.size();//throw new Exception();//too many reducer for such an input you need map.size() reducers or less ...
+            if (map.size() < numOfChunks)
+                numOfChunks = map.size();//throw new Exception();//too many reducer for such an input you need map.size() reducers or less ...
             int sizeOfChunk = map.size() / numOfChunks;
             Vector<Context> chunks = new Vector<>();
             Map tmp;
@@ -128,7 +131,7 @@ public class Shuffler {
                 chunks.add(new Context((SortedMap) tmp));
                 print(tmp.toString());
             }
-            for (int i = map.size();i<config.getReducerNodes();i++){
+            for (int i = map.size(); i < config.getReducerNodes(); i++) {
                 chunks.add(new Context());
             }
             return chunks;
@@ -144,14 +147,15 @@ public class Shuffler {
     public void start() {
         try {
             print("hello");
-            readConfig();
+            new Thread(() -> readConfig()).start();
             print("read config");
-            readFromMappers();
+            new Thread(() -> readFromMappers()).start();
             print("read from mappers");
+            while (!finished) ;
             sort();
             sendToReducers();
             print("sent to reducers");
-        }catch (Exception e){
+        } catch (Exception e) {
             print(e.getStackTrace().toString());
         }
     }

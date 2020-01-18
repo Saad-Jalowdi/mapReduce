@@ -1,7 +1,6 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit;
 
 public abstract class Reducer<K, V> {
 
@@ -55,16 +54,14 @@ public abstract class Reducer<K, V> {
         }
     }
 
-    public void start() {
+    protected void start() {
         try {
             print("hello ");
             readContext();
             print("mapperContext: " + mapperContext.getMap().toString());
             reduce();
             print(" reduced");
-            TimeUnit.SECONDS.sleep(5);
             sendToResult();
-            TimeUnit.SECONDS.sleep(5);
             print("send to result");
         } catch (Exception e) {
             print(e.toString());

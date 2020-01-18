@@ -4,8 +4,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Job {
 
-    private Mapper mapper;
-    private Reducer reducer;
+    private Class mapperClass;
+    private Class reducerClass;
     private Configuration configuration;
     private Input input;
 
@@ -13,19 +13,7 @@ public class Job {
         this.configuration = configuration;
     }
 
-    public void setMapper(Mapper mapper) {
-        this.mapper = mapper;
-        mapper.start();
-    }
-
-    public void setReducer(Reducer reducer) {
-        this.reducer = reducer;
-        reducer.start();
-    }
-
-
-    /*
-    public void setMapperClass(Mapper mapperClass) {
+    public void setMapperClass(Class mapperClass) {
         this.mapperClass = mapperClass;
         try {
             validateMapper();
@@ -68,7 +56,7 @@ public class Job {
             throw new Exception("not a reducer exception"); //TODO change it to NotReducerException
 
         }
-    }*/
+    }
 
     private boolean containersCreated(String s) throws InterruptedException, FileNotFoundException {
         while (!new File("/map_reduce/" + s).exists()) {
