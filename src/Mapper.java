@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 public abstract class Mapper<K extends Comparable, V> {
 
@@ -44,7 +45,7 @@ public abstract class Mapper<K extends Comparable, V> {
         }
     }
 
-    public void start(){
+    public void start() throws InterruptedException {
         log("mapper started");
         readData();
         log(data.toString());
@@ -52,7 +53,7 @@ public abstract class Mapper<K extends Comparable, V> {
         log("done mapping");
         sendToShuffler();
         log("sent to shuffler");
-
+        TimeUnit.SECONDS.sleep(5);
     }
 
     protected void log(String msg) {
