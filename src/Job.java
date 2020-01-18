@@ -38,7 +38,6 @@ public class Job {
             PrintStream printStream = new PrintStream(fileOutputStream);
             printStream.println(mapperClass.getName());
             while (!containersCreated("mapper_created.txt")) ;
-
         } else {
             throw new Exception("not a mapper exception"); //TODO change it to NotMapperException
         }
