@@ -9,6 +9,7 @@ public abstract class Mapper<K extends Comparable, V> {
     protected Context<K, V> context = new Context<>();
     protected LinkedList<String> data;
     private Configuration config;
+    private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
 
     private void readData() {
         try {
@@ -46,6 +47,7 @@ public abstract class Mapper<K extends Comparable, V> {
     }
 
     public void start() throws InterruptedException {
+        performanceLogger.start();
         log("mapper started");
         readData();
         log(data.toString());
@@ -54,6 +56,8 @@ public abstract class Mapper<K extends Comparable, V> {
         sendToShuffler();
         log("sent to shuffler");
         TimeUnit.SECONDS.sleep(5);
+        performanceLogger.stop();
+        performanceLogger.log();
     }
 
     protected void log(String msg) {

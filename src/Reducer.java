@@ -8,7 +8,7 @@ public abstract class Reducer<K, V> {
     private Context<K, V> mapperContext;
     private Iterable<K> keys;
     private String resultIp;
-
+    private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
 
     private void readContext() {
         try {
@@ -56,6 +56,7 @@ public abstract class Reducer<K, V> {
 
     protected void start() {
         try {
+            performanceLogger.start();
             print("hello ");
             readContext();
             print("mapperContext: " + mapperContext.getMap().toString());
@@ -63,6 +64,8 @@ public abstract class Reducer<K, V> {
             print(" reduced");
             sendToResult();
             print("send to result");
+            performanceLogger.stop();
+            performanceLogger.log();
         } catch (Exception e) {
             print(e.toString());
             System.exit(1);
