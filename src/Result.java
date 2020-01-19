@@ -16,13 +16,7 @@ public class Result {
             ServerSocket serverSocket = new ServerSocket(Ports.INPUT_RESULT_PORT);
             Socket input = serverSocket.accept();
             ObjectInputStream objectInputStream = new ObjectInputStream(input.getInputStream());
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(input.getOutputStream());
             this.config = (Configuration) objectInputStream.readObject();
-            objectOutputStream.writeInt(1);//ACK
-            objectInputStream.close();
-            objectOutputStream.close();
-            input.close();
-            serverSocket.close();
         } catch (IOException |
                 ClassNotFoundException e) {
             e.printStackTrace();
@@ -43,10 +37,8 @@ public class Result {
                     print("entered thread");
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(reducer.getInputStream());
-                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(reducer.getOutputStream());
                         print("before reading object");
                         Context context = (Context) objectInputStream.readObject();
-                        objectOutputStream.writeInt(1);//ACK
                         print("context received : " + context.getMap().toString() + " from : " + reducer.getInetAddress());
                         contexts.add(context);
                         if (contexts.size() == config.getReducerNodes()) {

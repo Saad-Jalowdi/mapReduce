@@ -99,9 +99,8 @@ public class Input {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             objectOutputStream.writeObject(config);
-            while (objectInputStream.readInt() != 1) ; //wait until ACK from shuffler important mapper could fail
+            while (objectInputStream.readInt() != 1) ; //wait until AWK from shuffler important mapper could fail
             objectOutputStream.close();
-            objectInputStream.close();
             shuffler.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -112,10 +111,7 @@ public class Input {
         try {
             Socket result = new Socket(config.getResultIp(), Ports.INPUT_RESULT_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(result.getOutputStream());
-            ObjectInputStream objectInputStream = new ObjectInputStream(result.getInputStream());
             objectOutputStream.writeObject(config);
-            while (objectInputStream.readInt() != 1) ;//ACK
-            objectInputStream.close();
             objectOutputStream.close();
             result.close();
         } catch (IOException e) {
@@ -130,6 +126,7 @@ public class Input {
             sendConfigToResult();
             split();
             performanceLogger.stop();
+
         } catch (Exception e) {
             log(e.toString());
         }

@@ -29,11 +29,8 @@ public abstract class Mapper<K extends Comparable, V> {
             Socket splitter = serverSocket.accept();
             log("connected with" + splitter.getInetAddress());
             ObjectInputStream objectInputStream = new ObjectInputStream(splitter.getInputStream());
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(splitter.getOutputStream());
             data = (LinkedList<String>) objectInputStream.readObject();
             config = (Configuration) objectInputStream.readObject();
-            objectOutputStream.writeInt(1);//ACK
-            objectOutputStream.close();
             objectInputStream.close();
             splitter.close();
             serverSocket.close();
@@ -52,12 +49,11 @@ public abstract class Mapper<K extends Comparable, V> {
             Socket shuffler = new Socket(config.getShufflerIp(), Ports.MAPPER_SHUFFLER_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             objectOutputStream.writeObject(context);
-            objectOutputStream.flush();
+            log(context.getMap().toString());
             objectOutputStream.close();
-            log("data sent to shuffler with size " + context.getMap().size());
             shuffler.close();
         } catch (IOException e) {
-            for (StackTraceElement element : e.getStackTrace())log(element.toString());
+            log(e.toString());
             e.printStackTrace();
         }
     }
@@ -66,6 +62,7 @@ public abstract class Mapper<K extends Comparable, V> {
         performanceLogger.start();
         log("mapper started");
         readData();
+        log(data.toString());
         map();
         log("done mapping");
         sendToShuffler();

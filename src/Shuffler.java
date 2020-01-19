@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * {@code Shuffler} represents the Shuffling phase of the
@@ -28,7 +29,7 @@ public class Shuffler {
             ObjectInputStream objectInputStream = new ObjectInputStream(input.getInputStream());
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(input.getOutputStream());
             this.config = (Configuration) objectInputStream.readObject();
-            objectOutputStream.writeInt(1);//ACK
+            objectOutputStream.writeInt(1);
             objectInputStream.close();
             input.close();
             serverSocket.close();
@@ -60,7 +61,7 @@ public class Shuffler {
                         log("object input stream created");
                         Context context = (Context) objectInputStream.readObject();
                         log("context read");
-                        log("data read from mapper with size : " + context.getMap().size());
+                        log(context.getMap().toString());
                         contexts.add(context);
                         if (contexts.size() == config.getMapperNodes()) {
                             finished = true;
@@ -71,9 +72,7 @@ public class Shuffler {
                         }
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
-                        log(e.toString());
-                        for (StackTraceElement element : e.getStackTrace()) log(element.toString());
-
+                        log(e.getStackTrace().toString());
                     }
                 }).start();
             }
@@ -81,19 +80,6 @@ public class Shuffler {
             e.printStackTrace();
             log(e.getStackTrace().toString());
         }
-    }
-
-    private void sendAckToMappers() {
-        try {
-            for (String ip : config.getMapperIpAddresses()) {
-                Socket mappper = new Socket(ip, Ports.MAPPER_SHUFFLER_PORT);
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(mappper.getOutputStream());
-                objectOutputStream.writeInt(1);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
 
@@ -134,12 +120,9 @@ public class Shuffler {
                         String ip = (String) finalIterator.next();
                         Socket reducer = new Socket(ip, Ports.SHUFFLER_REDUCER_PORT);
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(reducer.getOutputStream());
-                        ObjectInputStream objectInputStream = new ObjectInputStream(reducer.getInputStream());
                         log("sending a chunk with size " + chunk.getMap().size() + " to " + reducer.getInetAddress());
                         objectOutputStream.writeObject(chunk);
                         objectOutputStream.writeUTF(config.getResultIp());
-                        log("data sent to reducer with size : " + chunk.getMap().size());
-                        objectInputStream.close();
                         objectOutputStream.close();
                         reducer.close();
                     } catch (IOException e) {
@@ -178,6 +161,7 @@ public class Shuffler {
                     tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
                 }
                 chunks.add(new Context((SortedMap) tmp));
+                log(tmp.toString());
             }
             for (int i = map.size(); i < config.getReducerNodes(); i++) {
                 chunks.add(new Context());
@@ -197,7 +181,6 @@ public class Shuffler {
             readConfig();
             log("config's");
             readFromMappers();
-            sendAckToMappers();
             while (!finished) ;
             log("finished reading from mappers");
             sort();
@@ -227,6 +210,7 @@ public class Shuffler {
 
     public static void main(String[] args) throws InterruptedException {
         new Shuffler().start();
+        TimeUnit.SECONDS.sleep(5);
     }
 
 }
