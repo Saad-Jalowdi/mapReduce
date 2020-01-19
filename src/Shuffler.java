@@ -58,8 +58,10 @@ public class Shuffler {
                     try {
                         log("entered thread");
                         ObjectInputStream objectInputStream = new ObjectInputStream(mapper.getInputStream());
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(mapper.getOutputStream());
                         log("object input stream created");
                         Context context = (Context) objectInputStream.readObject();
+                        objectOutputStream.writeInt(1);
                         log("context read");
                         log(context.getMap().toString());
                         contexts.add(context);

@@ -48,7 +48,9 @@ public abstract class Mapper<K extends Comparable, V> {
             log(config.getShufflerIp());
             Socket shuffler = new Socket(config.getShufflerIp(), Ports.MAPPER_SHUFFLER_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
+            ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             objectOutputStream.writeObject(context);
+            while (objectInputStream.readInt()!=1); // wait until AWK
             log(context.getMap().toString());
             objectOutputStream.close();
             shuffler.close();
@@ -69,7 +71,6 @@ public abstract class Mapper<K extends Comparable, V> {
         log("sent to shuffler");
         performanceLogger.stop();
         performanceLogger.log();
-        TimeUnit.SECONDS.sleep(5);
     }
 
     private void log(String msg) {
