@@ -38,7 +38,6 @@ public class PerformanceLogger {
             FileWriter fileWriter = new FileWriter(file, true);
             fileWriter.write(loggerName + " execution time : " + endingTime.subtract(startingTime).toString() + " milliseconds\n");
             fileWriter.write(loggerName + " used memory : " + endingMem.subtract(startingMem).toString() + " bytes\n");
-
             fileWriter.flush();
             fileWriter.close();
         } catch (IOException e) {
