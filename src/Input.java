@@ -97,9 +97,7 @@ public class Input {
         try {
             Socket shuffler = new Socket(config.getShufflerIp(), Ports.INPUT_SHUFFLER_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
-            ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             objectOutputStream.writeObject(config);
-            while (objectInputStream.readInt() != 1) ; //wait until AWK from shuffler important mapper could fail
             objectOutputStream.close();
             shuffler.close();
         } catch (IOException e) {

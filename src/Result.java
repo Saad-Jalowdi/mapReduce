@@ -28,37 +28,37 @@ public class Result {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.REDUCER_RESULT_PORT);
             while (true) {
-                print("contexts size = : " + contexts.size());
+                log("contexts size = : " + contexts.size());
                 if (contexts.size() == config.getReducerNodes()) break;
-                print("waiting for reducers");
+                log("waiting for reducers");
                 Socket reducer = serverSocket.accept();
-                print(" connection established with : " + reducer.getInetAddress());
+                log(" connection established with : " + reducer.getInetAddress());
                 new Thread(() -> {
-                    print("entered thread");
+                    log("entered thread");
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(reducer.getInputStream());
-                        print("before reading object");
+                        log("before reading object");
                         Context context = (Context) objectInputStream.readObject();
-                        print("context received : " + context.getMap().toString() + " from : " + reducer.getInetAddress());
+                        log("context received : " + context.getMap().toString() + " from : " + reducer.getInetAddress());
                         contexts.add(context);
                         if (contexts.size() == config.getReducerNodes()) {
                             serverSocket.close();
                             //TODO LOG this ...
                         }
                     } catch (IOException | ClassNotFoundException e) {
-                        print(e.toString());
+                        log(e.toString());
                         e.printStackTrace();
                     }
                 }).start();
             }
         } catch (IOException e) {
-            print(e.toString());
+            log(e.toString());
             e.printStackTrace();
         }
     }
 
     private void merge() {
-        print("merging...");
+        log("merging...");
         map = new TreeMap();
 
         for (Context context : contexts) {
@@ -73,7 +73,7 @@ public class Result {
                 }
             });
         }
-        print(map.toString());
+        log(map.toString());
     }
 
     private void writeFinalResult() {
@@ -92,21 +92,21 @@ public class Result {
 
     private void start() {
         try {
-            print("hello");
+            log("hello");
             readConfig();
-            print("config read");
+            log("config read");
             readContext();
-            print("context read");
+            log("context read");
             merge();
-            print("done merging");
+            log("done merging");
             writeFinalResult();
-            print("actually it finished");
+            log("actually it finished");
         } catch (Exception e) {
-            print(e.toString());
+            log(e.toString());
         }
     }
 
-    protected void print(String msg) {
+    protected void log(String msg) {
         try {
             File file = new File("/map_reduce/log_result.txt");
             if(!file.exists()){
