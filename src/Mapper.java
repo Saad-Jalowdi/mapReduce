@@ -67,7 +67,6 @@ public abstract class Mapper<K extends Comparable, V> {
         performanceLogger.start();
         log("mapper started");
         readData();
-        log(data.toString());
         map();
         log("done mapping");
         sendToShuffler();

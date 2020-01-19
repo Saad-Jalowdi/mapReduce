@@ -57,10 +57,8 @@ public class Shuffler {
                     try {
                         log("entered thread");
                         ObjectInputStream objectInputStream = new ObjectInputStream(mapper.getInputStream());
-                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(mapper.getOutputStream());
                         log("object input stream created");
                         Context context = (Context) objectInputStream.readObject();
-                        objectOutputStream.writeInt(1);
                         log("context read");
                         log("data read from mapper with size : " + context.getMap().size());
                         contexts.add(context);
@@ -73,7 +71,7 @@ public class Shuffler {
                         }
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
-                        log(e.getStackTrace().toString());
+                        for (StackTraceElement element : e.getStackTrace()) log(element.toString());
                     }
                 }).start();
             }
@@ -81,6 +79,19 @@ public class Shuffler {
             e.printStackTrace();
             log(e.getStackTrace().toString());
         }
+    }
+
+    private void sendAckToMappers() {
+        try {
+            for (String ip : config.getMapperIpAddresses()) {
+                Socket mappper = new Socket(ip, Ports.MAPPER_SHUFFLER_PORT);
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(mappper.getOutputStream());
+                objectOutputStream.writeInt(1);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -184,6 +195,7 @@ public class Shuffler {
             readConfig();
             log("config's");
             readFromMappers();
+            sendAckToMappers();
             while (!finished) ;
             log("finished reading from mappers");
             sort();
