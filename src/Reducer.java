@@ -31,7 +31,7 @@ import java.net.Socket;
             mapperContext = (Context) objectInputStream.readObject();
             resultIp = objectInputStream.readUTF();
             keys = mapperContext.getMap().keySet();
-            log(mapperContext.getMap().toString());
+            log("context read with size : "+mapperContext.getMap().size()+" from shuffler.");
             objectInputStream.close();
             shuffler.close();
             serverSocket.close();
@@ -65,7 +65,7 @@ import java.net.Socket;
             Socket result = new Socket(resultIp, Ports.REDUCER_RESULT_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(result.getOutputStream());
             objectOutputStream.writeObject(context);
-            log(context.getMap().toString());
+            log("sending context with size : "+ context.getMap().size() + " to result");
             objectOutputStream.close();
             result.close();
         } catch (IOException e) {
@@ -82,7 +82,6 @@ import java.net.Socket;
             reduce();
             log("finished reducing reduced");
             sendToResult();
-            log("sent to result");
             performanceLogger.stop();
             performanceLogger.log();
         } catch (Exception e) {

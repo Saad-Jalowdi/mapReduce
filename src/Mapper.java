@@ -49,7 +49,7 @@ public abstract class Mapper<K extends Comparable, V> {
             Socket shuffler = new Socket(config.getShufflerIp(), Ports.MAPPER_SHUFFLER_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             objectOutputStream.writeObject(context);
-            log(context.getMap().toString());
+            log("context with size "+context.getMap().size()+" is sent to shuffler.");
             objectOutputStream.close();
             shuffler.close();
         } catch (IOException e) {
@@ -62,7 +62,6 @@ public abstract class Mapper<K extends Comparable, V> {
         performanceLogger.start();
         log("mapper started");
         readData();
-        log(data.toString());
         map();
         log("done mapping");
         sendToShuffler();

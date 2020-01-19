@@ -123,7 +123,6 @@ public class Input {
             sendConfigToShuffler();
             log("config sent to shuffler");
             sendConfigToResult();
-
             log("config sent to result");
             split();
             log("data splitted");

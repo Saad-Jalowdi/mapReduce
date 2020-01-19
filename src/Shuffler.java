@@ -54,23 +54,18 @@ public class Shuffler {
                 log("connected with " + mapper.getInetAddress());
                 new Thread(() -> {
                     try {
-                        log("entered thread");
                         ObjectInputStream objectInputStream = new ObjectInputStream(mapper.getInputStream());
-                        log("object input stream created");
                         Context context = (Context) objectInputStream.readObject();
-                        log("context read");
-                        log(context.getMap().toString());
+                        log("context with size " + context.getMap().size() + " received from mapper : " + mapper.getInetAddress());
                         contexts.add(context);
                         if (contexts.size() == config.getMapperNodes()) {
                             finished = true;
                             objectInputStream.close();
                             mapper.close();
                             serverSocket.close();
-                            //TODO LOG this ...
                         }
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
-                        log(e.getStackTrace().toString());
                     }
                 }).start();
             }
@@ -118,7 +113,7 @@ public class Shuffler {
                         String ip = (String) finalIterator.next();
                         Socket reducer = new Socket(ip, Ports.SHUFFLER_REDUCER_PORT);
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(reducer.getOutputStream());
-                        log("sending a chunk with size " + chunk.getMap().size() + " to " + reducer.getInetAddress());
+                        log("sending a chunk with size " + chunk.getMap().size() + " to reducer : " + reducer.getInetAddress());
                         objectOutputStream.writeObject(chunk);
                         objectOutputStream.writeUTF(config.getResultIp());
                         objectOutputStream.close();
