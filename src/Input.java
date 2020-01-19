@@ -34,7 +34,9 @@ public class Input {
     private void split() throws IOException {
         try {
             int splits = config.getMapperNodes();
-            if (listOfStrings.size() < splits) {splits = listOfStrings.size();}
+            if (listOfStrings.size() < splits) {
+                splits = listOfStrings.size();
+            }
             LinkedList<LinkedList<String>> chunks = new LinkedList<>();
             LinkedList<String> tmp = new LinkedList<>();
             int size = listOfStrings.size();
@@ -50,7 +52,7 @@ public class Input {
                 counter++;
             }
             if (sizePerSplit * splits <= listOfStrings.size() && chunks.size() != splits) {
-                log("true");
+                log(sizePerSplit * splits + " <=" + listOfStrings.size() + " && " + chunks.size() + " != " + splits);
                 chunks.add((LinkedList<String>) tmp.clone());
             } else {
                 log("false");
@@ -64,7 +66,7 @@ public class Input {
                 log(chunks.get(i).toString());
                 new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), chunks.get(i), config).start();
             }
-            for (int i = splits ; i < config.getMapperNodes(); i++){
+            for (int i = splits; i < config.getMapperNodes(); i++) {
                 new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), new LinkedList<>(), config).start();
             }
         } catch (Exception e) {
@@ -78,7 +80,7 @@ public class Input {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             objectOutputStream.writeObject(config);
-            while (objectInputStream.readInt()!=1);
+            while (objectInputStream.readInt() != 1) ;
             objectOutputStream.close();
             shuffler.close();
         } catch (IOException e) {
