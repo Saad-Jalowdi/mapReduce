@@ -52,6 +52,7 @@ public abstract class Mapper<K extends Comparable, V> {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             objectOutputStream.writeObject(context);
+            objectOutputStream.flush();
             objectOutputStream.close();
             objectInputStream.readInt(); // wait until ACK from shuffler
             log("data sent to shuffler with size " + context.getMap().size());

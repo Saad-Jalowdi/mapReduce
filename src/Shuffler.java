@@ -71,7 +71,9 @@ public class Shuffler {
                         }
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
+                        log(e.toString());
                         for (StackTraceElement element : e.getStackTrace()) log(element.toString());
+
                     }
                 }).start();
             }
