@@ -19,7 +19,9 @@ public class Shuffler {
             ServerSocket serverSocket = new ServerSocket(Ports.INPUT_SHUFFLER_PORT);
             Socket input = serverSocket.accept();
             ObjectInputStream objectInputStream = new ObjectInputStream(input.getInputStream());
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(input.getOutputStream());
             this.config = (Configuration) objectInputStream.readObject();
+            objectOutputStream.writeInt(1);
             objectInputStream.close();
             input.close();
             serverSocket.close();
