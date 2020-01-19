@@ -1,5 +1,8 @@
 import java.util.concurrent.TimeUnit;
 
+/**
+ * demo class..
+ */
 public class WordCountReducer extends Reducer<String, Integer> {
     @Override
     protected void reduce() {

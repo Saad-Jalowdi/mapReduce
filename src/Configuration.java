@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 /**
  * this class sets all of the configurations for the mapreduce framework to work properly.

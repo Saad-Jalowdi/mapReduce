@@ -4,6 +4,18 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * each instance of a subclass from {@code Mapper} represents a node
+ * in the mapping phase of the mapreduce framework.
+ * the user should create a class that extends @{@code Mapper} and write
+ * the implementation of the method map() user should also provide a main
+ * method in his class creating an instance of his class and call the
+ * start(); method.
+ *
+ * @param <K> output key of Mapper
+ * @param <V> output value of Mapper
+ * @author Sa'ad Al Jalowdi.
+ */
 public abstract class Mapper<K extends Comparable, V> {
 
     protected Context<K, V> context = new Context<>();
@@ -60,14 +72,14 @@ public abstract class Mapper<K extends Comparable, V> {
         performanceLogger.log();
     }
 
-    protected void log(String msg) {
+    private void log(String msg) {
         try {
             File file = new File("/map_reduce/log_mapper.txt");
-            if(!file.exists()){
+            if (!file.exists()) {
                 file.createNewFile();
             }
-            FileWriter fileWriter = new FileWriter(file,true);
-            fileWriter.write(msg+"\n");
+            FileWriter fileWriter = new FileWriter(file, true);
+            fileWriter.write(msg + "\n");
             fileWriter.flush();
             fileWriter.close();
         } catch (FileNotFoundException e) {

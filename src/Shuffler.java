@@ -4,6 +4,14 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * {@code Shuffler} represents the Shuffling phase of the
+ * mapreduce framework.
+ * it reads the output of each mapper in parallel and sort it
+ * and resend it to reducers as evenly as possible.
+ *
+ * @author Sa'ad Al Jalowdi.
+ */
 public class Shuffler {
     private Vector<Context> contexts = new Vector<>();
     private TreeMap map;
@@ -31,6 +39,10 @@ public class Shuffler {
 
     }
 
+    /**
+     * this method reads contexts from mappers and adds them to Vector<Context>
+     * to be sorted later.
+     */
     private void readFromMappers() {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.MAPPER_SHUFFLER_PORT);
@@ -70,6 +82,11 @@ public class Shuffler {
         }
     }
 
+
+    /**
+     * this method sorts the gathered contexts by simply adding them to
+     * a TreeMap since TreeMap stores Keys in order once they added to it.
+     */
     private void sort() {
         map = new TreeMap();
 
@@ -88,13 +105,14 @@ public class Shuffler {
 
     }
 
+    /**
+     * this method sends the data to the reducers
+     * in parallel and as evenly as possible.
+     */
     private void sendToReducers() {
-        log("creating chunks");
         Vector<Context> chunks = createChunks();
-        log("chunks created");
         Iterator iterator = config.getReducerIpAddresses().iterator();
         for (Context chunk : chunks) {
-            log("chunk : " + chunk.getMap().toString());
             if (iterator.hasNext()) {
                 Iterator finalIterator = iterator;
                 new Thread(() -> {
@@ -102,7 +120,7 @@ public class Shuffler {
                         String ip = (String) finalIterator.next();
                         Socket reducer = new Socket(ip, Ports.SHUFFLER_REDUCER_PORT);
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(reducer.getOutputStream());
-                        log("sending " + chunk.getMap().toString() + " to " + reducer.getInetAddress());
+                        log("sending a chunk with size " + chunk.getMap().size() + " to " + reducer.getInetAddress());
                         objectOutputStream.writeObject(chunk);
                         objectOutputStream.writeUTF(config.getResultIp());
                         objectOutputStream.close();
@@ -119,11 +137,20 @@ public class Shuffler {
 
     }
 
+    /**
+     * this method splits the sorted data into chunks that are equal to
+     * the number of reducers as evenly as possible.
+     *
+     * @return Vector<Context> each context in this vector is a chunk.
+     */
     private Vector<Context> createChunks() {
         try {
-            int numOfChunks = config.getReducerNodes();
-            if (map.size() < numOfChunks)
-                numOfChunks = map.size();//throw new Exception();//too many reducer for such an input you need map.size() reducers or less ...
+            int numOfChunks;
+            if (map.size() < config.getReducerNodes())
+                numOfChunks = map.size();
+            else {
+                numOfChunks = config.getReducerNodes();
+            }
             int sizeOfChunk = map.size() / numOfChunks;
             Vector<Context> chunks = new Vector<>();
             Map tmp;
@@ -151,12 +178,11 @@ public class Shuffler {
 
     public void start() {
         try {
-            log("hello");
             readConfig();
-            log("read config");
+            log("config's");
             readFromMappers();
             while (!finished) ;
-            log("read from mappers");
+            log("finished reading from mappers");
             sort();
             sendToReducers();
             log("sent to reducers");
@@ -168,7 +194,7 @@ public class Shuffler {
     protected void log(String msg) {
         try {
             File file = new File("/map_reduce/log_shuffler.txt");
-            if (!file.exists()){
+            if (!file.exists()) {
                 file.createNewFile();
             }
             FileWriter fileWriter = new FileWriter(file, true);
@@ -184,7 +210,6 @@ public class Shuffler {
 
     public static void main(String[] args) throws InterruptedException {
         new Shuffler().start();
-        TimeUnit.SECONDS.sleep(5);
     }
 
 }

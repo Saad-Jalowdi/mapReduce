@@ -124,8 +124,7 @@ public class Result {
 
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args)  {
         new Result().start();
-
     }
 }

@@ -1,11 +1,14 @@
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
+
 /**
  * this class represents the input phase in the mapreduce framework.
  * it reads the input file
+ *
  * @author Sa'ad Al Jalowdi.
  */
 public class Input {
@@ -13,7 +16,7 @@ public class Input {
     private Configuration config;
     private LinkedList<String> listOfStrings = new LinkedList<>();
     private ArrayList<String> mapperIpAddresses;
-
+    private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
     public Input(Configuration config) throws Exception {
         this.config = config;
         this.inputFile = this.config.getInputFile();
@@ -35,47 +38,56 @@ public class Input {
         }
     }
 
-    private void split() throws IOException {
-        try {
-            int splitsToBeFilled = config.getMapperNodes();
-            if (listOfStrings.size() < splitsToBeFilled) {
-                splitsToBeFilled = listOfStrings.size();
-            }
-            LinkedList<LinkedList<String>> chunks = new LinkedList<>();
-            LinkedList<String> tmp = new LinkedList<>();
-            int size = listOfStrings.size();
-            int sizePerSplit = size / splitsToBeFilled;
-            int counter = 0;
-            int splitsFilled = 0;
-            for (String s : listOfStrings) {
-                if (counter == sizePerSplit && splitsFilled < splitsToBeFilled) {
-                    chunks.add((LinkedList<String>) tmp.clone());
-                    tmp.clear();
-                    counter = 0;
-                    splitsFilled++;
-                }
-                tmp.add(s);
-                counter++;
-            }
-            if (sizePerSplit * splitsToBeFilled <= listOfStrings.size() && chunks.size() != splitsToBeFilled) {
-                log(sizePerSplit * splitsToBeFilled + " <=" + listOfStrings.size() + " && " + chunks.size() + " != " + splitsToBeFilled);
+    /**
+     * splits the input file into splits that are equal to the number of mappers
+     * and send them to the mappers in parallel.
+     * if the read data are less than the number of mappers an empty LinkedList will be
+     * sent to the remaining mappers as evenly as possible.
+     *
+     * @throws IOException
+     */
+    private void split() {
+        int splitsToBeFilled;
+
+        if (listOfStrings.size() < config.getMapperNodes()) {
+            splitsToBeFilled = listOfStrings.size();
+        } else {
+            splitsToBeFilled = config.getMapperNodes();
+        }
+
+        LinkedList<LinkedList<String>> chunks = new LinkedList<>();
+        LinkedList<String> tmp = new LinkedList<>();
+        int size = listOfStrings.size();
+        int sizePerSplit = size / splitsToBeFilled;
+        int counter = 0;
+        int filledSplits = 0;
+        for (String s : listOfStrings) {
+            if (counter == sizePerSplit && filledSplits < splitsToBeFilled) {
                 chunks.add((LinkedList<String>) tmp.clone());
-            } else {
-                log("false");
-                log("added to last");
-                chunks.getLast().addAll((LinkedList<String>) tmp.clone());
+                tmp.clear();
+                counter = 0;
+                filledSplits++;
             }
-            log("chunks : ");
-            for (LinkedList chunk : chunks) log(chunk.toString());
-            for (int i = 0; i < splitsToBeFilled; i++) {
-                log(mapperIpAddresses.get(i));
-                log(chunks.get(i).toString());
-                new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), chunks.get(i), config).start();
+            tmp.add(s);
+            counter++;
+        }
+
+        if (sizePerSplit * splitsToBeFilled <= listOfStrings.size() && chunks.size() != splitsToBeFilled) {
+            chunks.add((LinkedList<String>) tmp.clone());
+        } else {
+            chunks.getLast().addAll((LinkedList<String>) tmp.clone());
+        }
+
+        try {
+            Iterator iterator = mapperIpAddresses.iterator();
+            for (LinkedList<String> chunk : chunks) {
+                new Splitter(new Socket((String) iterator.next(), Ports.SPLITTER_MAPPER_PORT), chunk, config).start();
             }
+
             for (int i = splitsToBeFilled; i < config.getMapperNodes(); i++) {
-                new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), new LinkedList<>(), config).start();
+                new Splitter(new Socket((String) iterator.next(), Ports.SPLITTER_MAPPER_PORT), new LinkedList<>(), config).start();
             }
-        } catch (Exception e) {
+        }catch (IOException e){
             log(e.toString());
         }
     }
@@ -86,7 +98,7 @@ public class Input {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             objectOutputStream.writeObject(config);
-            while (objectInputStream.readInt() != 1) ;
+            while (objectInputStream.readInt() != 1) ; //wait until AWK from shuffler important mapper could fail
             objectOutputStream.close();
             shuffler.close();
         } catch (IOException e) {
@@ -107,14 +119,11 @@ public class Input {
     }
 
     public void start() {
-        try {
-            log(listOfStrings.toString());
-            sendConfigToShuffler();
-            sendConfigToResult();
-            split();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        performanceLogger.start();
+        sendConfigToShuffler();
+        sendConfigToResult();
+        split();
+        performanceLogger.stop();
     }
 
     protected void log(String msg) {
