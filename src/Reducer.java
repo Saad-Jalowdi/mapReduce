@@ -31,7 +31,7 @@ import java.net.Socket;
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             mapperContext = (Context) objectInputStream.readObject();
             resultIp = objectInputStream.readUTF();
-            objectOutputStream.writeInt(1);
+            objectOutputStream.writeInt(1);//ACK
             keys = mapperContext.getMap().keySet();
             log(mapperContext.getMap().toString());
             objectInputStream.close();
@@ -69,7 +69,7 @@ import java.net.Socket;
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(result.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(result.getInputStream());
             objectOutputStream.writeObject(context);
-            while (objectInputStream.readInt()!=1);//wait until ACK from result
+            objectInputStream.readInt();//wait until ACK from result
             log(context.getMap().toString());
             objectOutputStream.close();
             result.close();

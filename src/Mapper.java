@@ -52,7 +52,7 @@ public abstract class Mapper<K extends Comparable, V> {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             objectOutputStream.writeObject(context);
-            while (objectInputStream.readInt()!=1); // wait until ACK from shuffler
+            objectInputStream.readInt(); // wait until ACK from shuffler
             log(context.getMap().toString());
             objectOutputStream.close();
             shuffler.close();
