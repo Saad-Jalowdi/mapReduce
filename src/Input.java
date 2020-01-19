@@ -121,8 +121,12 @@ public class Input {
         try {
             performanceLogger.start();
             sendConfigToShuffler();
+            log("config sent to shuffler");
             sendConfigToResult();
+
+            log("config sent to result");
             split();
+            log("data splitted");
             performanceLogger.stop();
 
         } catch (Exception e) {

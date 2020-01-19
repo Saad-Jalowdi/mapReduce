@@ -15,10 +15,10 @@ public class Splitter extends Thread{
 
     @Override
     public void run() {
-        try(final ObjectOutputStream objectOutputStream = new ObjectOutputStream(mapper.getOutputStream())
-            ;final ObjectInputStream objectInputStream = new ObjectInputStream(mapper.getInputStream())){
+        try(final ObjectOutputStream objectOutputStream = new ObjectOutputStream(mapper.getOutputStream())){
             objectOutputStream.writeObject(chunk);
             objectOutputStream.writeObject(config);
+            log("chunk with size : "+chunk.size() +" is sent to mapper" );
             mapper.close();
         } catch (IOException e) {
             e.printStackTrace();
