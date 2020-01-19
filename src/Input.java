@@ -43,6 +43,7 @@ public class Input {
             int sizePerSplit = size / splits;
             int counter = 0;
             for (String s : listOfStrings) {
+                if (chunks.size()==splits)break;
                 if (counter == sizePerSplit) {
                     chunks.add((LinkedList<String>) tmp.clone());
                     tmp.clear();
