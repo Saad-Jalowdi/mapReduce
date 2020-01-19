@@ -67,9 +67,9 @@ public abstract class Mapper<K extends Comparable, V> {
         log("done mapping");
         sendToShuffler();
         log("sent to shuffler");
-        TimeUnit.SECONDS.sleep(5);
         performanceLogger.stop();
         performanceLogger.log();
+        TimeUnit.SECONDS.sleep(5);
     }
 
     private void log(String msg) {
