@@ -7,7 +7,7 @@ public class Driver {
     public static void main(String[] args) {
         try {
 
-            Configuration configuration = new Configuration(new File("/map_reduce/input2.txt"), new File("/map_reduce/output.txt"));
+            Configuration configuration = new Configuration(new File("/map_reduce/input.txt"), new File("/map_reduce/output.txt"));
             PrintStream printStream = new PrintStream(new FileOutputStream(new File("/map_reduce/stdout.txt")));
             printStream.println(
                     configuration.getMapperIpAddresses() + "\n" + configuration.getReducerIpAddresses()

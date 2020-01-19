@@ -128,7 +128,6 @@ public class Shuffler {
             Vector<Context> chunks = new Vector<>();
             Map tmp;
             for (int i = 0; i < map.size(); i += sizeOfChunk) {
-                if (chunks.size()==map.size())break;
                 if (i + sizeOfChunk * 2 >= map.size()) {
                     tmp = map.tailMap(map.keySet().toArray()[i]);
                 } else {
