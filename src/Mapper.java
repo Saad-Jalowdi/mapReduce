@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * each instance of a subclass from {@code Mapper} represents a node
@@ -50,13 +51,10 @@ public abstract class Mapper<K extends Comparable, V> {
             log(config.getShufflerIp());
             Socket shuffler = new Socket(config.getShufflerIp(), Ports.MAPPER_SHUFFLER_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
-            ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             objectOutputStream.writeObject(context);
             objectOutputStream.flush();
             objectOutputStream.close();
-            objectInputStream.readInt(); // wait until ACK from shuffler
             log("data sent to shuffler with size " + context.getMap().size());
-            objectInputStream.close();
             shuffler.close();
         } catch (IOException e) {
             for (StackTraceElement element : e.getStackTrace())log(element.toString());
@@ -74,6 +72,7 @@ public abstract class Mapper<K extends Comparable, V> {
         log("sent to shuffler");
         performanceLogger.stop();
         performanceLogger.log();
+        TimeUnit.SECONDS.sleep(5);
     }
 
     private void log(String msg) {
