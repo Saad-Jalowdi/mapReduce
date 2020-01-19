@@ -52,10 +52,10 @@ public abstract class Mapper<K extends Comparable, V> {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             objectOutputStream.writeObject(context);
+            objectOutputStream.close();
             objectInputStream.readInt(); // wait until ACK from shuffler
             log("data sent to shuffler with size " + context.getMap().size());
             objectInputStream.close();
-            objectOutputStream.close();
             shuffler.close();
         } catch (IOException e) {
             for (StackTraceElement element : e.getStackTrace())log(element.toString());
