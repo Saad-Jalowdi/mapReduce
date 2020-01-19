@@ -54,10 +54,11 @@ public abstract class Mapper<K extends Comparable, V> {
             objectOutputStream.writeObject(context);
             objectInputStream.readInt(); // wait until ACK from shuffler
             log(context.getMap().toString());
+            objectInputStream.close();
             objectOutputStream.close();
             shuffler.close();
         } catch (IOException e) {
-            log(e.toString());
+            log(e.getStackTrace().toString());
             e.printStackTrace();
         }
     }

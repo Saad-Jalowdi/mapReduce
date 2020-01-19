@@ -31,7 +31,6 @@ import java.net.Socket;
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             mapperContext = (Context) objectInputStream.readObject();
             resultIp = objectInputStream.readUTF();
-            objectOutputStream.writeInt(1);//ACK
             keys = mapperContext.getMap().keySet();
             log(mapperContext.getMap().toString());
             objectInputStream.close();

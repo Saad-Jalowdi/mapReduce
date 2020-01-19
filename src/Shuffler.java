@@ -125,7 +125,6 @@ public class Shuffler {
                         log("sending a chunk with size " + chunk.getMap().size() + " to " + reducer.getInetAddress());
                         objectOutputStream.writeObject(chunk);
                         objectOutputStream.writeUTF(config.getResultIp());
-                        objectInputStream.readInt();//wait for ACK from reducer
                         objectInputStream.close();
                         objectOutputStream.close();
                         reducer.close();
