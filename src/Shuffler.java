@@ -165,7 +165,6 @@ public class Shuffler {
                     tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
                 }
                 chunks.add(new Context((SortedMap) tmp));
-                log(tmp.toString());
             }
             for (int i = map.size(); i < config.getReducerNodes(); i++) {
                 chunks.add(new Context());

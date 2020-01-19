@@ -58,7 +58,7 @@ public abstract class Mapper<K extends Comparable, V> {
             objectOutputStream.close();
             shuffler.close();
         } catch (IOException e) {
-            log(e.getStackTrace().toString());
+            for (StackTraceElement element : e.getStackTrace())log(element.toString());
             e.printStackTrace();
         }
     }
