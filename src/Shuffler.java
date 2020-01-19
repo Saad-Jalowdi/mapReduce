@@ -210,7 +210,6 @@ public class Shuffler {
 
     public static void main(String[] args) throws InterruptedException {
         new Shuffler().start();
-        TimeUnit.SECONDS.sleep(5);
     }
 
 }

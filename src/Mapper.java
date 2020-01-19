@@ -58,7 +58,7 @@ public abstract class Mapper<K extends Comparable, V> {
         }
     }
 
-    public void start() throws InterruptedException {
+    public void start()  {
         performanceLogger.start();
         log("mapper started");
         readData();
@@ -67,7 +67,6 @@ public abstract class Mapper<K extends Comparable, V> {
         log("done mapping");
         sendToShuffler();
         log("sent to shuffler");
-        TimeUnit.SECONDS.sleep(5);
         performanceLogger.stop();
         performanceLogger.log();
     }

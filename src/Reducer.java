@@ -87,7 +87,6 @@ import java.net.Socket;
             performanceLogger.log();
         } catch (Exception e) {
             log(e.toString());
-            System.exit(1);
         }
 
     }

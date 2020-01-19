@@ -17,6 +17,7 @@ public class Input {
     private LinkedList<String> listOfStrings = new LinkedList<>();
     private ArrayList<String> mapperIpAddresses;
     private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
+
     public Input(Configuration config) throws Exception {
         this.config = config;
         this.inputFile = this.config.getInputFile();
@@ -87,7 +88,7 @@ public class Input {
             for (int i = splitsToBeFilled; i < config.getMapperNodes(); i++) {
                 new Splitter(new Socket((String) iterator.next(), Ports.SPLITTER_MAPPER_PORT), new LinkedList<>(), config).start();
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             log(e.toString());
         }
     }
@@ -119,11 +120,16 @@ public class Input {
     }
 
     public void start() {
-        performanceLogger.start();
-        sendConfigToShuffler();
-        sendConfigToResult();
-        split();
-        performanceLogger.stop();
+        try {
+            performanceLogger.start();
+            sendConfigToShuffler();
+            sendConfigToResult();
+            split();
+            performanceLogger.stop();
+
+        } catch (Exception e) {
+            log(e.toString());
+        }
     }
 
     protected void log(String msg) {
