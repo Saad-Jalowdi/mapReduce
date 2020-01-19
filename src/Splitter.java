@@ -19,7 +19,6 @@ public class Splitter extends Thread{
             ;final ObjectInputStream objectInputStream = new ObjectInputStream(mapper.getInputStream())){
             objectOutputStream.writeObject(chunk);
             objectOutputStream.writeObject(config);
-            objectInputStream.readInt();//wait until ack from mapper
             mapper.close();
         } catch (IOException e) {
             e.printStackTrace();
