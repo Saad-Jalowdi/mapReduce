@@ -38,10 +38,10 @@ public class Input {
             LinkedList<LinkedList<String>> chunks = new LinkedList<>();
             LinkedList<String> tmp = new LinkedList<>();
             int size = listOfStrings.size();
-            int sizeForEachSplit = size / splits;
+            int sizePerSplit = size / splits;
             int counter = 0;
             for (String s : listOfStrings) {
-                if (counter == sizeForEachSplit) {
+                if (counter == sizePerSplit) {
                     chunks.add((LinkedList<String>) tmp.clone());
                     tmp.clear();
                     counter = 0;
@@ -49,9 +49,11 @@ public class Input {
                 tmp.add(s);
                 counter++;
             }
-            if (sizeForEachSplit * splits <= listOfStrings.size() && chunks.size() != splits) {
+            if (sizePerSplit * splits <= listOfStrings.size() && chunks.size() != splits) {
+                log("true");
                 chunks.add((LinkedList<String>) tmp.clone());
             } else {
+                log("false");
                 log("added to last");
                 chunks.getLast().addAll((LinkedList<String>) tmp.clone());
             }
