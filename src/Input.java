@@ -33,27 +33,28 @@ public class Input {
 
     private void split() throws IOException {
         try {
-            int splits = config.getMapperNodes();
-            if (listOfStrings.size() < splits) {
-                splits = listOfStrings.size();
+            int splitsToBeFilled = config.getMapperNodes();
+            if (listOfStrings.size() < splitsToBeFilled) {
+                splitsToBeFilled = listOfStrings.size();
             }
             LinkedList<LinkedList<String>> chunks = new LinkedList<>();
             LinkedList<String> tmp = new LinkedList<>();
             int size = listOfStrings.size();
-            int sizePerSplit = size / splits;
+            int sizePerSplit = size / splitsToBeFilled;
             int counter = 0;
+            int splitsFilled = 0;
             for (String s : listOfStrings) {
-                if (chunks.size()==splits)break;
-                if (counter == sizePerSplit) {
+                if (counter == sizePerSplit && splitsFilled < splitsToBeFilled) {
                     chunks.add((LinkedList<String>) tmp.clone());
                     tmp.clear();
                     counter = 0;
+                    splitsFilled++;
                 }
                 tmp.add(s);
                 counter++;
             }
-            if (sizePerSplit * splits <= listOfStrings.size() && chunks.size() != splits) {
-                log(sizePerSplit * splits + " <=" + listOfStrings.size() + " && " + chunks.size() + " != " + splits);
+            if (sizePerSplit * splitsToBeFilled <= listOfStrings.size() && chunks.size() != splitsToBeFilled) {
+                log(sizePerSplit * splitsToBeFilled + " <=" + listOfStrings.size() + " && " + chunks.size() + " != " + splitsToBeFilled);
                 chunks.add((LinkedList<String>) tmp.clone());
             } else {
                 log("false");
@@ -62,12 +63,12 @@ public class Input {
             }
             log("chunks : ");
             for (LinkedList chunk : chunks) log(chunk.toString());
-            for (int i = 0; i < splits; i++) {
+            for (int i = 0; i < splitsToBeFilled; i++) {
                 log(mapperIpAddresses.get(i));
                 log(chunks.get(i).toString());
                 new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), chunks.get(i), config).start();
             }
-            for (int i = splits; i < config.getMapperNodes(); i++) {
+            for (int i = splitsToBeFilled; i < config.getMapperNodes(); i++) {
                 new Splitter(new Socket(mapperIpAddresses.get(i), Ports.SPLITTER_MAPPER_PORT), new LinkedList<>(), config).start();
             }
         } catch (Exception e) {
