@@ -52,6 +52,7 @@ public class Input {
             if (sizeForEachSplit * splits <= listOfStrings.size() && chunks.size() != splits) {
                 chunks.add((LinkedList<String>) tmp.clone());
             } else {
+                log("added to last");
                 chunks.getLast().addAll((LinkedList<String>) tmp.clone());
             }
             log("chunks : ");
