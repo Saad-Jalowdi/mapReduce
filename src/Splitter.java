@@ -23,6 +23,7 @@ public class Splitter extends Thread{
             mapper.close();
         } catch (IOException e) {
             e.printStackTrace();
+            log(e.toString());
         }
     }
 

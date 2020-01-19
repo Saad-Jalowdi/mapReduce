@@ -62,7 +62,7 @@ public class Shuffler {
                         Context context = (Context) objectInputStream.readObject();
                         objectOutputStream.writeInt(1);
                         log("context read");
-                        log(context.getMap().toString());
+                        log("data read from mapper with size : " + context.getMap().size());
                         contexts.add(context);
                         if (contexts.size() == config.getMapperNodes()) {
                             finished = true;
@@ -125,6 +125,7 @@ public class Shuffler {
                         log("sending a chunk with size " + chunk.getMap().size() + " to " + reducer.getInetAddress());
                         objectOutputStream.writeObject(chunk);
                         objectOutputStream.writeUTF(config.getResultIp());
+                        log("data sent to reducer with size : " + chunk.getMap().size());
                         objectInputStream.close();
                         objectOutputStream.close();
                         reducer.close();

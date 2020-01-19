@@ -32,7 +32,7 @@ import java.net.Socket;
             mapperContext = (Context) objectInputStream.readObject();
             resultIp = objectInputStream.readUTF();
             keys = mapperContext.getMap().keySet();
-            log(mapperContext.getMap().toString());
+            log("data read from shuffler with size : "+mapperContext.getMap().size());
             objectInputStream.close();
             objectOutputStream.close();
             shuffler.close();
