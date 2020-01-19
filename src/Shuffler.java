@@ -2,7 +2,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * {@code Shuffler} represents the Shuffling phase of the
@@ -29,7 +28,7 @@ public class Shuffler {
             ObjectInputStream objectInputStream = new ObjectInputStream(input.getInputStream());
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(input.getOutputStream());
             this.config = (Configuration) objectInputStream.readObject();
-            objectOutputStream.writeInt(1);
+            objectOutputStream.writeInt(1);//ACK
             objectInputStream.close();
             input.close();
             serverSocket.close();
@@ -122,9 +121,12 @@ public class Shuffler {
                         String ip = (String) finalIterator.next();
                         Socket reducer = new Socket(ip, Ports.SHUFFLER_REDUCER_PORT);
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(reducer.getOutputStream());
+                        ObjectInputStream objectInputStream = new ObjectInputStream(reducer.getInputStream());
                         log("sending a chunk with size " + chunk.getMap().size() + " to " + reducer.getInetAddress());
                         objectOutputStream.writeObject(chunk);
                         objectOutputStream.writeUTF(config.getResultIp());
+                        while (objectInputStream.readInt()!=1);//wait for ACK from reducer
+                        objectInputStream.close();
                         objectOutputStream.close();
                         reducer.close();
                     } catch (IOException e) {
@@ -212,7 +214,6 @@ public class Shuffler {
 
     public static void main(String[] args) throws InterruptedException {
         new Shuffler().start();
-        TimeUnit.SECONDS.sleep(5);
     }
 
 }

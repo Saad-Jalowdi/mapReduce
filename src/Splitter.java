@@ -15,10 +15,11 @@ public class Splitter extends Thread{
 
     @Override
     public void run() {
-        try(final ObjectOutputStream objectOutputStream = new ObjectOutputStream(mapper.getOutputStream())){
+        try(final ObjectOutputStream objectOutputStream = new ObjectOutputStream(mapper.getOutputStream())
+            ;final ObjectInputStream objectInputStream = new ObjectInputStream(mapper.getInputStream())){
             objectOutputStream.writeObject(chunk);
-            log(chunk.toString());
             objectOutputStream.writeObject(config);
+            while (objectInputStream.readInt()!=1);//wait until ack from mapper
             mapper.close();
         } catch (IOException e) {
             e.printStackTrace();

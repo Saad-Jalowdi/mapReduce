@@ -2,7 +2,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
 
 /**
  * each instance of a subclass from {@code Mapper} represents a node
@@ -29,8 +28,11 @@ public abstract class Mapper<K extends Comparable, V> {
             Socket splitter = serverSocket.accept();
             log("connected with" + splitter.getInetAddress());
             ObjectInputStream objectInputStream = new ObjectInputStream(splitter.getInputStream());
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(splitter.getOutputStream());
             data = (LinkedList<String>) objectInputStream.readObject();
             config = (Configuration) objectInputStream.readObject();
+            objectOutputStream.writeInt(1);//ACK
+            objectOutputStream.close();
             objectInputStream.close();
             splitter.close();
             serverSocket.close();
@@ -50,7 +52,7 @@ public abstract class Mapper<K extends Comparable, V> {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
             objectOutputStream.writeObject(context);
-            while (objectInputStream.readInt()!=1); // wait until AWK
+            while (objectInputStream.readInt()!=1); // wait until ACK from shuffler
             log(context.getMap().toString());
             objectOutputStream.close();
             shuffler.close();

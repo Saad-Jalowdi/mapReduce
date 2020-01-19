@@ -28,11 +28,14 @@ import java.net.Socket;
             Socket shuffler = serverSocket.accept();
             log("connected with" + shuffler.getInetAddress());
             ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             mapperContext = (Context) objectInputStream.readObject();
             resultIp = objectInputStream.readUTF();
+            objectOutputStream.writeInt(1);
             keys = mapperContext.getMap().keySet();
             log(mapperContext.getMap().toString());
             objectInputStream.close();
+            objectOutputStream.close();
             shuffler.close();
             serverSocket.close();
         } catch (IOException | ClassNotFoundException e) {
@@ -64,7 +67,9 @@ import java.net.Socket;
         try {
             Socket result = new Socket(resultIp, Ports.REDUCER_RESULT_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(result.getOutputStream());
+            ObjectInputStream objectInputStream = new ObjectInputStream(result.getInputStream());
             objectOutputStream.writeObject(context);
+            while (objectInputStream.readInt()!=1);//wait until ACK from result
             log(context.getMap().toString());
             objectOutputStream.close();
             result.close();
