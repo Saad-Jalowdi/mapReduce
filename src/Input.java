@@ -3,7 +3,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
-
+/**
+ * this class represents the input phase in the mapreduce framework.
+ * it reads the input file
+ * @author Sa'ad Al Jalowdi.
+ */
 public class Input {
     private File inputFile;
     private Configuration config;

@@ -39,17 +39,17 @@ public class Shuffler {
                     finished = true;
                     break;
                 }
-                print("waiting for mappers");
+                log("waiting for mappers");
                 Socket mapper = serverSocket.accept();
-                print("connected with " + mapper.getInetAddress());
+                log("connected with " + mapper.getInetAddress());
                 new Thread(() -> {
                     try {
-                        print("entered thread");
+                        log("entered thread");
                         ObjectInputStream objectInputStream = new ObjectInputStream(mapper.getInputStream());
-                        print("object input stream created");
+                        log("object input stream created");
                         Context context = (Context) objectInputStream.readObject();
-                        print("context read");
-                        print(context.getMap().toString());
+                        log("context read");
+                        log(context.getMap().toString());
                         contexts.add(context);
                         if (contexts.size() == config.getMapperNodes()) {
                             finished = true;
@@ -60,13 +60,13 @@ public class Shuffler {
                         }
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
-                        print(e.getStackTrace().toString());
+                        log(e.getStackTrace().toString());
                     }
                 }).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
-            print(e.getStackTrace().toString());
+            log(e.getStackTrace().toString());
         }
     }
 
@@ -89,12 +89,12 @@ public class Shuffler {
     }
 
     private void sendToReducers() {
-        print("creating chunks");
+        log("creating chunks");
         Vector<Context> chunks = createChunks();
-        print("chunks created");
+        log("chunks created");
         Iterator iterator = config.getReducerIpAddresses().iterator();
         for (Context chunk : chunks) {
-            print("chunk : " + chunk.getMap().toString());
+            log("chunk : " + chunk.getMap().toString());
             if (iterator.hasNext()) {
                 Iterator finalIterator = iterator;
                 new Thread(() -> {
@@ -102,13 +102,13 @@ public class Shuffler {
                         String ip = (String) finalIterator.next();
                         Socket reducer = new Socket(ip, Ports.SHUFFLER_REDUCER_PORT);
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(reducer.getOutputStream());
-                        print("sending " + chunk.getMap().toString() + " to " + reducer.getInetAddress());
+                        log("sending " + chunk.getMap().toString() + " to " + reducer.getInetAddress());
                         objectOutputStream.writeObject(chunk);
                         objectOutputStream.writeUTF(config.getResultIp());
                         objectOutputStream.close();
                         reducer.close();
                     } catch (IOException e) {
-                        print(e.toString());
+                        log(e.toString());
                         e.printStackTrace();
                     }
                 }).start();
@@ -134,14 +134,14 @@ public class Shuffler {
                     tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
                 }
                 chunks.add(new Context((SortedMap) tmp));
-                print(tmp.toString());
+                log(tmp.toString());
             }
             for (int i = map.size(); i < config.getReducerNodes(); i++) {
                 chunks.add(new Context());
             }
             return chunks;
         } catch (Exception e) {
-            print(e.getStackTrace().toString());
+            log(e.getStackTrace().toString());
             System.exit(1);
         }
         return null;
@@ -151,21 +151,21 @@ public class Shuffler {
 
     public void start() {
         try {
-            print("hello");
+            log("hello");
             readConfig();
-            print("read config");
+            log("read config");
             readFromMappers();
             while (!finished) ;
-            print("read from mappers");
+            log("read from mappers");
             sort();
             sendToReducers();
-            print("sent to reducers");
+            log("sent to reducers");
         } catch (Exception e) {
-            print(e.getStackTrace().toString());
+            log(e.getStackTrace().toString());
         }
     }
 
-    protected void print(String msg) {
+    protected void log(String msg) {
         try {
             File file = new File("/map_reduce/log_shuffler.txt");
             if (!file.exists()){

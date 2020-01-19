@@ -5,6 +5,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * this class sets all of the configurations for the mapreduce framework to work properly.
+ * all of these configurations are read from files that have been written through a shell script
+ * that automates the flow and the order of starting each phase when it's needed.
+ *
+ * @author Sa'ad Al Jalowdi.
+ */
 public class Configuration implements Serializable {
     private File inputFile;
     private File outputFile;
@@ -37,20 +44,20 @@ public class Configuration implements Serializable {
             Scanner scanner = new Scanner(new File(pathname));
             ArrayList<String> tmp;
             if (pathname.equals("/map_reduce/mapper_ip_addresses.txt")) {
-                waitUntilFileCreated(pathname);
+                while (!new File(pathname).exists()) ;
                 tmp = mapperIpAddresses;
             } else if (pathname.equals("/map_reduce/reducer_ip_addresses.txt")) {
-                waitUntilFileCreated(pathname);
+                while (!new File(pathname).exists()) ;
                 tmp = reducerIpAddresses;
             } else if (pathname.equals("/map_reduce/shuffler_ip_address.txt")) {
-                waitUntilFileCreated(pathname);
+                while (!new File(pathname).exists()) ;
                 this.shufflerIp = scanner.next();
                 return;
-            } else if(pathname.equals("/map_reduce/result_ip_address.txt")){
-                waitUntilFileCreated(pathname);
+            } else if (pathname.equals("/map_reduce/result_ip_address.txt")) {
+                while (!new File(pathname).exists()) ;
                 this.resultIp = scanner.next();
                 return;
-            }else{
+            } else {
                 throw new Exception("Unexpected path.");//TODO exception
             }
             while (scanner.hasNext()) {
@@ -61,12 +68,6 @@ public class Configuration implements Serializable {
             e.printStackTrace();
         }
 
-    }
-
-    private void waitUntilFileCreated(String pathname) throws InterruptedException {
-        while (!new File(pathname).exists()) {
-            TimeUnit.MILLISECONDS.sleep(250);
-        }
     }
 
 
