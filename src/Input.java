@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 /**
  * this class represents the input phase in the mapreduce framework.
@@ -128,6 +129,7 @@ public class Input {
             log("data splitted");
             performanceLogger.stop();
             performanceLogger.log();
+            TimeUnit.SECONDS.sleep(5);
         } catch (Exception e) {
             log(e.toString());
         }
