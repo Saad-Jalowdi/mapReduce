@@ -4,8 +4,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 public class Driver {
-    public static void main(String[] args) {
-        try {
+    public static void main(String[] args) throws UnExpectedPathException, FileNotFoundException, NoInputFileException {
 
             Configuration configuration = new Configuration(new File("/map_reduce/input.txt"), new File("/map_reduce/output.txt"));
             Job job = new Job(configuration);
@@ -14,9 +13,6 @@ public class Driver {
             job.start();
             print("testing");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void print(String msg) {

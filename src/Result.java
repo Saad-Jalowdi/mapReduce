@@ -5,6 +5,11 @@ import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.Vector;
 
+/**
+ * this class collects data from reducers in parallel
+ * the same way shuffler collects data from mappers
+ * and it keeps order.
+ */
 public class Result {
 
     private Vector<Context> contexts = new Vector<>();
@@ -17,6 +22,8 @@ public class Result {
             Socket input = serverSocket.accept();
             ObjectInputStream objectInputStream = new ObjectInputStream(input.getInputStream());
             this.config = (Configuration) objectInputStream.readObject();
+            objectInputStream.close();
+            input.close();
         } catch (IOException |
                 ClassNotFoundException e) {
             e.printStackTrace();
@@ -39,11 +46,12 @@ public class Result {
                         ObjectInputStream objectInputStream = new ObjectInputStream(reducer.getInputStream());
                         log("before reading object");
                         Context context = (Context) objectInputStream.readObject();
-                        log("context received : " + context.getMap().toString() + " from : " + reducer.getInetAddress());
+                        log("context received with size : " + context.getMap().size() + " from : " + reducer.getInetAddress());
                         contexts.add(context);
                         if (contexts.size() == config.getReducerNodes()) {
+                            objectInputStream.close();
+                            reducer.close();
                             serverSocket.close();
-                            //TODO LOG this ...
                         }
                     } catch (IOException | ClassNotFoundException e) {
                         log(e.toString());
@@ -57,8 +65,7 @@ public class Result {
         }
     }
 
-    private void merge() {
-        log("merging...");
+    private void sort() {
         map = new TreeMap();
 
         for (Context context : contexts) {
@@ -73,7 +80,6 @@ public class Result {
                 }
             });
         }
-        log(map.toString());
     }
 
     private void writeFinalResult() {
@@ -92,15 +98,14 @@ public class Result {
 
     private void start() {
         try {
-            log("hello");
             readConfig();
             log("config read");
             readContext();
             log("context read");
-            merge();
-            log("done merging");
+            sort();
+            log("done sorting");
             writeFinalResult();
-            log("actually it finished");
+            log("finished writing result");
         } catch (Exception e) {
             log(e.toString());
         }

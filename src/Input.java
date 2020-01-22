@@ -18,16 +18,16 @@ public class Input {
     private ArrayList<String> mapperIpAddresses;
     private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
 
-    public Input(Configuration config) throws Exception {
+    public Input(Configuration config) throws NoInputFileException {
         this.config = config;
         this.inputFile = this.config.getInputFile();
-        readFile();
+        readInputFile();
         this.mapperIpAddresses = config.getMapperIpAddresses();
     }
 
 
-    private void readFile() throws Exception {
-        if (inputFile == null) throw new Exception("input file should be initialized"); //TODO no input file exception
+    private void readInputFile() throws NoInputFileException {
+        if (inputFile == null) throw new NoInputFileException("use Configuration with args.");
         try {
             Scanner scanner = new Scanner(inputFile);
             while (scanner.hasNext()) {
@@ -127,7 +127,7 @@ public class Input {
             split();
             log("data splitted");
             performanceLogger.stop();
-
+            performanceLogger.log();
         } catch (Exception e) {
             log(e.toString());
         }

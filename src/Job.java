@@ -73,7 +73,6 @@ public class Job {
      * @throws FileNotFoundException
      */
     private boolean containersCreated(String s) {
-
         try {
             File file = new File("/map_reduce/" + s);
             while (!file.exists()) ;
@@ -85,7 +84,7 @@ public class Job {
         }
     }
 
-    public void start() throws Exception {
+    public void start() throws NoInputFileException {
         input = new Input(configuration);
         input.start();
     }

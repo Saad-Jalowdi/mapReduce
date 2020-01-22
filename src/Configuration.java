@@ -21,7 +21,7 @@ public class Configuration implements Serializable {
     private String shufflerIp;
     private String resultIp;
 
-    public Configuration(File inputFile, File outputFile) throws Exception {
+    public Configuration(File inputFile, File outputFile) throws UnExpectedPathException, FileNotFoundException {
         this.inputFile = inputFile;
         this.outputFile = outputFile;
         readNumberOfNodes();
@@ -38,7 +38,7 @@ public class Configuration implements Serializable {
         this.reducerNodes = Integer.parseInt(scanner.next());
     }
 
-    private void readAddresses(String pathname) throws Exception {
+    private void readAddresses(String pathname) throws UnExpectedPathException {
         try {
             Scanner scanner = new Scanner(new File(pathname));
             ArrayList<String> tmp;
@@ -57,7 +57,7 @@ public class Configuration implements Serializable {
                 this.resultIp = scanner.next();
                 return;
             } else {
-                throw new Exception("Unexpected path.");//TODO exception
+                throw new UnExpectedPathException();
             }
             while (scanner.hasNext()) {
                 tmp.add(scanner.next());

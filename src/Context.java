@@ -3,6 +3,14 @@ import java.util.LinkedList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+/**
+ * this class acts as tha Map class provided from java.util.Map
+ * the difference is it allows multiple writes on the same key
+ * by adding values into LinkedList<V>.
+ * @param <K> key
+ * @param <V> value
+ * @author Sa'ad Al Jalowdi.
+ */
 public class Context<K, V> implements Serializable, Writeable<K, V> {
     private SortedMap<K, LinkedList<V>> map ;
 

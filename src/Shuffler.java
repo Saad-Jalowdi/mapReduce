@@ -41,7 +41,7 @@ public class Shuffler {
      * this method reads contexts from mappers and adds them to Vector<Context>
      * to be sorted later.
      */
-    private void readFromMappers() {
+    private void readContextFromMappers() {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.MAPPER_SHUFFLER_PORT);
             while (true) {
@@ -102,7 +102,7 @@ public class Shuffler {
      * this method sends the data to the reducers
      * in parallel and as evenly as possible.
      */
-    private void sendToReducers() {
+    private void sendContextToReducers() {
         Vector<Context> chunks = createChunks();
         Iterator iterator = config.getReducerIpAddresses().iterator();
         for (Context chunk : chunks) {
@@ -171,11 +171,11 @@ public class Shuffler {
         try {
             readConfig();
             log("config's");
-            readFromMappers();
+            readContextFromMappers();
             while (!finished) ;
             log("finished reading from mappers");
             sort();
-            sendToReducers();
+            sendContextToReducers();
             log("sent to reducers");
         } catch (Exception e) {
             log(e.getStackTrace().toString());

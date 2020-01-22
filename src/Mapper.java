@@ -23,6 +23,7 @@ public abstract class Mapper<K extends Comparable, V> {
     private Configuration config;
     private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
 
+    //read data from splitter.
     private void readData() {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.SPLITTER_MAPPER_PORT);
@@ -31,10 +32,10 @@ public abstract class Mapper<K extends Comparable, V> {
             ObjectInputStream objectInputStream = new ObjectInputStream(splitter.getInputStream());
             data = (LinkedList<String>) objectInputStream.readObject();
             config = (Configuration) objectInputStream.readObject();
+            log("data read from splitter with size : " + data.size());
             objectInputStream.close();
             splitter.close();
             serverSocket.close();
-            log("read data finished");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -43,13 +44,12 @@ public abstract class Mapper<K extends Comparable, V> {
     public abstract void map();
 
 
-    private void sendToShuffler() {
+    private void sendContextToShuffler() {
         try {
-            log(config.getShufflerIp());
             Socket shuffler = new Socket(config.getShufflerIp(), Ports.MAPPER_SHUFFLER_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(shuffler.getOutputStream());
             objectOutputStream.writeObject(context);
-            log("context with size "+context.getMap().size()+" is sent to shuffler.");
+            log("context with size " + context.getMap().size() + " is sent to shuffler.");
             objectOutputStream.close();
             shuffler.close();
         } catch (IOException e) {
@@ -60,11 +60,10 @@ public abstract class Mapper<K extends Comparable, V> {
 
     public void start() throws InterruptedException {
         performanceLogger.start();
-        log("mapper started");
         readData();
         map();
         log("done mapping");
-        sendToShuffler();
+        sendContextToShuffler();
         log("sent to shuffler");
         performanceLogger.stop();
         performanceLogger.log();

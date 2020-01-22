@@ -13,7 +13,8 @@ import java.net.Socket;
  * @param <K> output key of Reducer
  * @param <V> output value of Reducer
  * @author Sa'ad Al Jalowdi.
- */public abstract class Reducer<K, V> {
+ */
+public abstract class Reducer<K extends Comparable, V> {
 
     protected Context<K, V> context = new Context<>();
     private Context<K, V> mapperContext;
@@ -22,7 +23,7 @@ import java.net.Socket;
     private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
 
     //read context from shuffler
-    private void readContext() {
+    private void readContextFromShuffler() {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.SHUFFLER_REDUCER_PORT);
             Socket shuffler = serverSocket.accept();
@@ -31,7 +32,7 @@ import java.net.Socket;
             mapperContext = (Context) objectInputStream.readObject();
             resultIp = objectInputStream.readUTF();
             keys = mapperContext.getMap().keySet();
-            log("context read with size : "+mapperContext.getMap().size()+" from shuffler.");
+            log("context read with size : " + mapperContext.getMap().size() + " from shuffler.");
             objectInputStream.close();
             shuffler.close();
             serverSocket.close();
@@ -44,6 +45,7 @@ import java.net.Socket;
 
     /**
      * this method returns an Iterable of the keys that have been written on mappers.
+     *
      * @return Iterable<K>
      */
     public Iterable<K> getKeys() {
@@ -52,20 +54,21 @@ import java.net.Socket;
 
     /**
      * this method returns an Iterable of the values for a specified key.
+     *
      * @param key that desired to get values for.
      * @return Iterable<V>
      */
-    protected Iterable<V> getValuesFor(K key)  {
+    protected Iterable<V> getValuesFor(K key) {
         return mapperContext.getMap().get(key);
     }
 
     //sending context to final result.
-    private void sendToResult() {
+    private void sendContextToResult() {
         try {
             Socket result = new Socket(resultIp, Ports.REDUCER_RESULT_PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(result.getOutputStream());
             objectOutputStream.writeObject(context);
-            log("sending context with size : "+ context.getMap().size() + " to result");
+            log("sending context with size : " + context.getMap().size() + " to result");
             objectOutputStream.close();
             result.close();
         } catch (IOException e) {
@@ -77,11 +80,11 @@ import java.net.Socket;
     protected void start() {
         try {
             performanceLogger.start();
-            readContext();
+            readContextFromShuffler();
             log("read context size : " + mapperContext.getMap().size());
             reduce();
             log("finished reducing reduced");
-            sendToResult();
+            sendContextToResult();
             performanceLogger.stop();
             performanceLogger.log();
         } catch (Exception e) {
@@ -93,7 +96,7 @@ import java.net.Socket;
     private void log(String msg) {
         try {
             File file = new File("/map_reduce/log_reducer.txt");
-            if(!file.exists()){
+            if (!file.exists()) {
                 file.createNewFile();
             }
             FileWriter fileWriter = new FileWriter(file, true);
