@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class Input {
     private File inputFile;
     private Configuration config;
-    private LinkedList<String> listOfStrings = new LinkedList<>();
+    private LinkedList<String> wordsInFile = new LinkedList<>();
     private ArrayList<String> mapperIpAddresses;
     private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
 
@@ -31,7 +31,7 @@ public class Input {
         try {
             Scanner scanner = new Scanner(inputFile);
             while (scanner.hasNext()) {
-                listOfStrings.add(scanner.next());
+                wordsInFile.add(scanner.next());
             }
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -50,19 +50,19 @@ public class Input {
     private void split() {
         int splitsToBeFilled;
 
-        if (listOfStrings.size() < config.getMapperNodes()) {
-            splitsToBeFilled = listOfStrings.size();
+        if (wordsInFile.size() < config.getMapperNodes()) {
+            splitsToBeFilled = wordsInFile.size();
         } else {
             splitsToBeFilled = config.getMapperNodes();
         }
 
         LinkedList<LinkedList<String>> chunks = new LinkedList<>();
         LinkedList<String> tmp = new LinkedList<>();
-        int size = listOfStrings.size();
+        int size = wordsInFile.size();
         int sizePerSplit = size / splitsToBeFilled;
         int counter = 0;
         int filledSplits = 0;
-        for (String s : listOfStrings) {
+        for (String s : wordsInFile) {
             if (counter == sizePerSplit && filledSplits < splitsToBeFilled) {
                 chunks.add((LinkedList<String>) tmp.clone());
                 tmp.clear();
@@ -73,7 +73,7 @@ public class Input {
             counter++;
         }
 
-        if (sizePerSplit * splitsToBeFilled <= listOfStrings.size() && chunks.size() != splitsToBeFilled) {
+        if (sizePerSplit * splitsToBeFilled <= wordsInFile.size() && chunks.size() < splitsToBeFilled) {
             chunks.add((LinkedList<String>) tmp.clone());
         } else {
             chunks.getLast().addAll((LinkedList<String>) tmp.clone());

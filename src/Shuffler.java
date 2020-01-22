@@ -144,6 +144,7 @@ public class Shuffler {
             else {
                 numOfChunks = config.getReducerNodes();
             }
+
             int sizeOfChunk = map.size() / numOfChunks;
             Vector<Context> chunks = new Vector<>();
             Map tmp;
@@ -178,7 +179,7 @@ public class Shuffler {
             sendContextToReducers();
             log("sent to reducers");
         } catch (Exception e) {
-            log(e.getStackTrace().toString());
+            log(e.toString());
         }
     }
 
