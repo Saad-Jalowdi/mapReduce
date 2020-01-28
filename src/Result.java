@@ -12,7 +12,7 @@ import java.util.Vector;
  */
 public class Result {
 
-    private Vector<Context> contexts = new Vector<>();
+    private Vector<ReducerContext> contexts = new Vector<>();
     private Configuration config;
     private TreeMap map;
 
@@ -45,7 +45,7 @@ public class Result {
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(reducer.getInputStream());
                         log("before reading object");
-                        Context context = (Context) objectInputStream.readObject();
+                        ReducerContext context = (ReducerContext) objectInputStream.readObject();
                         log("context received with size : " + context.getMap().size() + " from : " + reducer.getInetAddress());
                         contexts.add(context);
                         if (contexts.size() == config.getReducerNodes()) {
@@ -68,7 +68,7 @@ public class Result {
     private void sort() {
         map = new TreeMap();
 
-        for (Context context : contexts) {
+        for (ReducerContext context : contexts) {
             context.getMap().forEach((k, v) -> {
                 if (map.containsKey(k)) {
                     LinkedList currentVal = (LinkedList) map.get(k);
@@ -96,7 +96,7 @@ public class Result {
     }
 
 
-    private void start() {
+    private final void start() {
         try {
             readConfig();
             log("config read");

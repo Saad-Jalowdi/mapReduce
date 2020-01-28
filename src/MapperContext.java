@@ -11,14 +11,14 @@ import java.util.TreeMap;
  * @param <V> value
  * @author Sa'ad Al Jalowdi.
  */
-public class Context<K, V> implements Serializable, Writeable<K, V> {
+public class MapperContext<K, V> implements Serializable, Writeable<K, V> {
     private SortedMap<K, LinkedList<V>> map ;
 
-    public Context() {
+    public MapperContext() {
         map = new TreeMap<>();
     }
 
-    public Context(SortedMap<K, LinkedList<V>> map) {
+    public MapperContext(SortedMap<K, LinkedList<V>> map) {
         this.map = map;
     }
 

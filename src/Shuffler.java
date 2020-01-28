@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @author Sa'ad Al Jalowdi.
  */
 public class Shuffler {
-    private Vector<Context> contexts = new Vector<>();
+    private Vector<MapperContext> contexts = new Vector<>();
     private TreeMap map;
     private Configuration config;
     private boolean finished = false;
@@ -55,7 +55,7 @@ public class Shuffler {
                 new Thread(() -> {
                     try {
                         ObjectInputStream objectInputStream = new ObjectInputStream(mapper.getInputStream());
-                        Context context = (Context) objectInputStream.readObject();
+                        MapperContext context = (MapperContext) objectInputStream.readObject();
                         log("context with size " + context.getMap().size() + " received from mapper : " + mapper.getInetAddress());
                         contexts.add(context);
                         if (contexts.size() == config.getMapperNodes()) {
@@ -83,7 +83,7 @@ public class Shuffler {
     private void sort() {
         map = new TreeMap();
 
-        for (Context context : contexts) {
+        for (MapperContext context : contexts) {
             context.getMap().forEach((k, v) -> {
                 if (map.containsKey(k)) {
                     LinkedList currentVal = (LinkedList) map.get(k);
@@ -103,9 +103,9 @@ public class Shuffler {
      * in parallel and as evenly as possible.
      */
     private void sendContextToReducers() {
-        Vector<Context> chunks = createChunks();
+        Vector<MapperContext> chunks = createChunks();
         Iterator iterator = config.getReducerIpAddresses().iterator();
-        for (Context chunk : chunks) {
+        for (MapperContext chunk : chunks) {
             if (iterator.hasNext()) {
                 Iterator finalIterator = iterator;
                 new Thread(() -> {
@@ -136,7 +136,7 @@ public class Shuffler {
      *
      * @return Vector<Context> each context in this vector is a chunk.
      */
-    private Vector<Context> createChunks() {
+    private Vector<MapperContext> createChunks() {
         try {
             int numOfChunks;
             if (map.size() < config.getReducerNodes())
@@ -146,7 +146,7 @@ public class Shuffler {
             }
 
             int sizeOfChunk = map.size() / numOfChunks;
-            Vector<Context> chunks = new Vector<>();
+            Vector<MapperContext> chunks = new Vector<>();
             Map tmp;
             for (int i = 0; i < map.size(); i += sizeOfChunk) {
                 if (i + sizeOfChunk * 2 >= map.size()) {
@@ -154,10 +154,10 @@ public class Shuffler {
                 } else {
                     tmp = map.subMap(map.keySet().toArray()[i], map.keySet().toArray()[i + sizeOfChunk]);
                 }
-                chunks.add(new Context((SortedMap) tmp));
+                chunks.add(new MapperContext((SortedMap) tmp));
             }
             for (int i = map.size(); i < config.getReducerNodes(); i++) {
-                chunks.add(new Context());
+                chunks.add(new MapperContext());
             }
             return chunks;
         } catch (Exception e) {

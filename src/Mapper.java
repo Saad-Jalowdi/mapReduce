@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class Mapper<K extends Comparable, V> {
 
-    protected Context<K, V> context = new Context<>();
+    protected MapperContext<K, V> context = new MapperContext<>();
     protected LinkedList<String> data;
     private Configuration config;
     private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
@@ -58,7 +58,7 @@ public abstract class Mapper<K extends Comparable, V> {
         }
     }
 
-    public void start() throws InterruptedException {
+    protected final void start() {
         try {
         performanceLogger.start();
         readData();

@@ -118,7 +118,7 @@ public class Input {
         }
     }
 
-    public void start() {
+    public final void start() {
         try {
             performanceLogger.start();
             sendConfigToShuffler();

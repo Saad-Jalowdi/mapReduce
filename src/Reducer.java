@@ -16,8 +16,8 @@ import java.net.Socket;
  */
 public abstract class Reducer<K extends Comparable, V> {
 
-    protected Context<K, V> context = new Context<>();
-    private Context<K, V> mapperContext;
+    protected ReducerContext<K, V> context = new ReducerContext<>();
+    private MapperContext<K, V> mapperContext;
     private Iterable<K> keys;
     private String resultIp;
     private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
@@ -29,7 +29,7 @@ public abstract class Reducer<K extends Comparable, V> {
             Socket shuffler = serverSocket.accept();
             log("connected with" + shuffler.getInetAddress());
             ObjectInputStream objectInputStream = new ObjectInputStream(shuffler.getInputStream());
-            mapperContext = (Context) objectInputStream.readObject();
+            mapperContext = (MapperContext) objectInputStream.readObject();
             resultIp = objectInputStream.readUTF();
             keys = mapperContext.getMap().keySet();
             log("context read with size : " + mapperContext.getMap().size() + " from shuffler.");
@@ -77,7 +77,7 @@ public abstract class Reducer<K extends Comparable, V> {
         }
     }
 
-    protected void start() {
+    protected final void start() {
         try {
             performanceLogger.start();
             readContextFromShuffler();

@@ -84,7 +84,7 @@ public class Job {
         }
     }
 
-    public void start() throws NoInputFileException {
+    public final void start() throws NoInputFileException {
         input = new Input(configuration);
         input.start();
     }
