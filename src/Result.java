@@ -11,10 +11,17 @@ import java.util.Vector;
  * and it keeps order.
  */
 public class Result {
-
+    private static Result result = null;
     private Vector<ReducerContext> contexts = new Vector<>();
     private Configuration config;
     private TreeMap map;
+
+    private Result() {
+    }
+
+    public static Result getInstance() {
+        return result == null ? new Result() : result;
+    }
 
     private void readConfig() {
         try {
@@ -114,7 +121,7 @@ public class Result {
     protected void log(String msg) {
         try {
             File file = new File("/map_reduce/log_result.txt");
-            if(!file.exists()){
+            if (!file.exists()) {
                 file.createNewFile();
             }
             FileWriter fileWriter = new FileWriter(file, true);
@@ -129,7 +136,7 @@ public class Result {
 
     }
 
-    public static void main(String[] args)  {
-        new Result().start();
+    public static void main(String[] args) {
+        Result.getInstance().start();
     }
 }

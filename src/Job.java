@@ -85,7 +85,7 @@ public class Job {
     }
 
     public final void start() throws NoInputFileException {
-        input = new Input(configuration);
+        input = Input.getInstance(configuration);
         input.start();
     }
 }

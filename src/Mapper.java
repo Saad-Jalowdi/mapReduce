@@ -60,15 +60,16 @@ public abstract class Mapper<K extends Comparable, V> {
 
     protected final void start() {
         try {
-        performanceLogger.start();
-        readData();
-        map();
-        log("done mapping");
-        sendContextToShuffler();
-        log("sent to shuffler");
-        performanceLogger.stop();
-        performanceLogger.log();
-        TimeUnit.SECONDS.sleep(5);}catch (Exception e){
+            readData();
+            performanceLogger.start();
+            map();
+            performanceLogger.stop();
+            log("done mapping");
+            sendContextToShuffler();
+            log("sent to shuffler");
+            performanceLogger.log();
+            TimeUnit.SECONDS.sleep(5);
+        } catch (Exception e) {
             log(e.toString());
         }
     }

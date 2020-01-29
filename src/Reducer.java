@@ -22,7 +22,6 @@ public abstract class Reducer<K extends Comparable, V> {
     private String resultIp;
     private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
 
-    //read context from shuffler
     private void readContextFromShuffler() {
         try {
             ServerSocket serverSocket = new ServerSocket(Ports.SHUFFLER_REDUCER_PORT);
@@ -62,7 +61,6 @@ public abstract class Reducer<K extends Comparable, V> {
         return mapperContext.getMap().get(key);
     }
 
-    //sending context to final result.
     private void sendContextToResult() {
         try {
             Socket result = new Socket(resultIp, Ports.REDUCER_RESULT_PORT);
@@ -79,13 +77,13 @@ public abstract class Reducer<K extends Comparable, V> {
 
     protected final void start() {
         try {
-            performanceLogger.start();
             readContextFromShuffler();
             log("read context size : " + mapperContext.getMap().size());
+            performanceLogger.start();
             reduce();
+            performanceLogger.stop();
             log("finished reducing reduced");
             sendContextToResult();
-            performanceLogger.stop();
             performanceLogger.log();
         } catch (Exception e) {
             log(e.toString());

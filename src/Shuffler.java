@@ -13,13 +13,17 @@ import java.util.concurrent.TimeUnit;
  * @author Sa'ad Al Jalowdi.
  */
 public class Shuffler {
+    private static Shuffler shuffler = null;
     private Vector<MapperContext> contexts = new Vector<>();
     private TreeMap map;
     private Configuration config;
     private boolean finished = false;
 
-    public Shuffler() {
+    private Shuffler() {
+    }
 
+    public static Shuffler getInstance() {
+        return shuffler == null ? new Shuffler() : shuffler;
     }
 
     private void readConfig() {
@@ -71,7 +75,7 @@ public class Shuffler {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            log(e.getStackTrace().toString());
+            log(e.toString());
         }
     }
 
@@ -161,9 +165,9 @@ public class Shuffler {
             }
             return chunks;
         } catch (Exception e) {
-            log(e.getStackTrace().toString());
+            log(e.toString());
         }
-        return null;
+        return new Vector<>();
 
     }
 
@@ -201,7 +205,7 @@ public class Shuffler {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        new Shuffler().start();
+        Shuffler.getInstance().start();
         TimeUnit.SECONDS.sleep(5);
     }
 

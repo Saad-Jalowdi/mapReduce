@@ -20,6 +20,7 @@ public class Configuration implements Serializable {
     private ArrayList<String> reducerIpAddresses = new ArrayList<>();
     private String shufflerIp;
     private String resultIp;
+    private boolean readByLine = false;
 
     public Configuration(File inputFile, File outputFile) throws UnExpectedPathException, FileNotFoundException {
         this.inputFile = inputFile;
@@ -69,7 +70,6 @@ public class Configuration implements Serializable {
 
     }
 
-
     public File getInputFile() {
         return inputFile;
     }
@@ -101,5 +101,13 @@ public class Configuration implements Serializable {
 
     public String getResultIp() {
         return resultIp;
+    }
+
+    public boolean isReadByLine() {
+        return readByLine;
+    }
+
+    public void setReadByLine(boolean readByLine) {
+        this.readByLine = readByLine;
     }
 }

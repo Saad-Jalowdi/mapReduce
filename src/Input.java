@@ -13,26 +13,36 @@ import java.util.concurrent.TimeUnit;
  * @author Sa'ad Al Jalowdi.
  */
 public class Input {
+    private static Input input = null;
     private File inputFile;
     private Configuration config;
     private LinkedList<String> wordsInFile = new LinkedList<>();
     private ArrayList<String> mapperIpAddresses;
     private PerformanceLogger performanceLogger = PerformanceLogger.getLogger(this.getClass().getName());
 
-    public Input(Configuration config) throws NoInputFileException {
+    private Input(Configuration config) throws NoInputFileException {
         this.config = config;
         this.inputFile = this.config.getInputFile();
         readInputFile();
         this.mapperIpAddresses = config.getMapperIpAddresses();
     }
 
+    public static Input getInstance(Configuration configuration) throws NoInputFileException {
+        return input == null ? new Input(configuration) : input;
+    }
 
     private void readInputFile() throws NoInputFileException {
         if (inputFile == null) throw new NoInputFileException("use Configuration with args.");
         try {
             Scanner scanner = new Scanner(inputFile);
-            while (scanner.hasNext()) {
-                wordsInFile.add(scanner.next());
+            if (config.isReadByLine()) {
+                while (scanner.hasNextLine()) {
+                    wordsInFile.add(scanner.nextLine());
+                }
+            } else {
+                while (scanner.hasNext()) {
+                    wordsInFile.add(scanner.next());
+                }
             }
             scanner.close();
         } catch (FileNotFoundException e) {
